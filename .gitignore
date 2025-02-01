@@ -16,7 +16,7 @@ temp/*
 
 # Compiled Dynamic libraries
 *.so
-*.dylib
+# *.dylib
 *.dll
 
 # Fortran module files
@@ -37,3 +37,6 @@ temp/*
 # Platformio
 .pio/
 .vscode/
+
+# Virtual Env
+.venv/
