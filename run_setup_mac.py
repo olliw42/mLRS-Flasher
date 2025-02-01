@@ -1,3 +1,12 @@
+#!/usr/bin/env python3
+#*******************************************************
+# Copyright (c) MLRS project
+# GPL3
+# https://www.gnu.org/licenses/gpl-3.0.de.html
+#*******************************************************
+# MacOS Launcher
+#********************************************************
+
 import os
 import subprocess
 
