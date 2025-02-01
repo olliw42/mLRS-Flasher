@@ -33,6 +33,13 @@ def run_flasher():
 
 if __name__ == "__main__":
     current_directory = os.getcwd()
-    remove_quarantine_attribute(current_directory)
-    setup_virtualenv()
-    run_flasher()
+    
+    # Check if venv folder exists before running run_flasher
+    if os.path.isdir("venv"):
+        print("Virtual environment found, running flasher script...")
+        run_flasher()
+    else:
+        print("Virtual environment not found. Removing quarantine and setting up virtual environment...")
+        remove_quarantine_attribute(current_directory)
+        setup_virtualenv()
+        run_flasher()
