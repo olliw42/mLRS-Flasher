@@ -6,15 +6,15 @@
 # OlliW @ www.olliw.eu
 #*******************************************************
 # mLRS Flasher Desktop App
-# 2. Feb. 2025 001
+# 4. Feb. 2025 001
 #********************************************************
-app_version = '2.02.2025-001'
+app_version = '4.02.2025-001'
 
 import os, sys, time
 import subprocess
 import re
 
-from PIL import Image
+from PIL import Image, ImageTk
 import customtkinter as ctk
 from customtkinter import ThemeManager, filedialog
 import configparser
@@ -40,48 +40,12 @@ def create_dir(path):
     if not os.path.exists(path):
         make_dir(path)
 
-'''
-def os_system(arg):
-    res = subprocess.call(arg)
-    if res != 0:
-        print('# ERROR (errno =',res,') DONE #')
-        #print('Press Enter to continue')
-        #input()
-        #exit(1)
-'''
 def os_system(arg):
     res = os.system(arg)
     if res != 0:
         print('# ERROR (errno =',res,') DONE #')
         os.system("pause")
         exit(1)
-
-'''
-python_cmd = '' # 'python' or 'python3' depending on installation
-
-def _check_python_version(required_version):
-    try:
-        res = subprocess.check_output([required_version, "--version"], text=True)
-        major_version = re.findall(r'\d', res)[0]
-        return int(major_version)
-    except:
-        return 0
-
-def check_python():
-    # check if Python is installed and find which Python cmd to use
-    global python_cmd
-    if _check_python_version('python') == 3:
-        python_cmd = 'python'
-    elif _check_python_version('python3') == 3:
-        python_cmd = 'python3'
-    else:
-        print("ERROR: Python 3 not found on your system. Please make sure Python 3 is available.")
-        print('Press Enter to continue')
-        input()
-        exit(1)
-
-check_python()
-'''
 
 
 '''
@@ -815,7 +779,9 @@ class App(ctk.CTk):
 
         self.title('mLRS Flasher Desktop App '+app_version)
         self.geometry('700x500')
-        self.iconbitmap(os.path.join('assets','mLRS_logo_round.ico'))
+        #self.iconbitmap(os.path.join('assets','mLRS_logo_round.ico')) # does not work on Mac
+        self.wm_iconbitmap()
+        self.iconphoto(False, ImageTk.PhotoImage(file = os.path.join('assets','mLRS_logo_round.ico')))
 
         #-- set grid layout 1x2
         self.grid_rowconfigure(0, weight=1)
