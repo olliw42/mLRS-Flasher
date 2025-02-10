@@ -139,7 +139,7 @@ def find_esp_device_serial_ports():
             continue
         if port.vid == 0x1209 and port.pid == 0x5740: # this is ArduPilot
             continue
-        if not 'Silicon Labs CP210x' in port.description:
+        if "CP210" not in port.description:
             continue
         deviceportList.append(port.device)
         #print('*',port.device, port.name, port.description)
