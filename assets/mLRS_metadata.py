@@ -73,9 +73,9 @@ g_targetDict = {
                 'Flash method: connect to USB (select COM port)\n\n' +
                 'Wireless bridge: ESP8285\n' +
                 'Dip switches need to be set as follow:\n' +
-                '  1,2 on:    update firmware on main ESP32, USB is connected to UARTO\n' +
-                '  3,4 on:    normal operation mode, USB is not used, UARTO connected to ESP8285\n' +
-                '  5,6,7 on:  update firmware on ESP8285, USB is connected to ESP8285 UART\n',
+                '  1,2 on:    update firmware on main ESP32, USB connected to UARTO\n' +
+                '  3,4 on:    normal operation mode, USB not used, UARTO connected to ESP8285\n' +
+                '  5,6,7 on:  update firmware on ESP8285, USB connected to ESP8285 UART\n',
             'wireless' : {
                 'chipset' : 'esp8266', 
                 'reset' : 'dtr', 
