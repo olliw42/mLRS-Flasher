@@ -56,7 +56,7 @@ g_targetDict = {
     'tx-matek' : {
         'flashmethod' : 'dfu',
         'description' : 
-            'Flash method: DFU, connect to USB\n' +
+            'Flash method: DFU, connect to USB\n\n' +
             'Wireless bridge: HC04, cannot be flashed\n',
     },
     'tx-E77-MBLKit' : {},
@@ -70,7 +70,7 @@ g_targetDict = {
     'tx-betafpv' : {
         'tx-betafpv-micro-1w-2400' : {
             'description' : 
-                'Flash method: connect to USB (select COM port)\n' +
+                'Flash method: connect to USB (select COM port)\n\n' +
                 'Wireless bridge: ESP8285\n' +
                 'Dip switches need to be set as follow:\n' +
                 '  1,2 on:    update firmware on main ESP32, USB is connected to UARTO\n' +
@@ -86,7 +86,7 @@ g_targetDict = {
     'tx-radiomaster' : {
         'tx-radiomaster-bandit' : {
             'description' : 
-                'Flash method: connect to USB (select COM port)\n' +
+                'Flash method: connect to USB (select COM port)\n\n' +
                 'Wireless bridge: ESP8285\n' +
                 'For flashing the wireless bridge: \n' +
                 '  - set SerDest to serial2\n' +
@@ -108,7 +108,7 @@ g_targetDict = {
         'description' : 
             "Supported radios: T20 V2, T15, T14, T-Pro S\n" +
             "Flash method: radio passthrough\n" + 
-            "  - connect to USB of your radio and select 'USB Serial (VCP)'\n" +
+            "  - connect to USB of your radio and select 'USB Serial (VCP)'\n\n" +
             "Wireless bridge: ESP8285\n" +
             "For flashing the wireless bridge:\n" +
             "  - connect to USB of your radio and select 'USB Serial (VCP)'\n",
@@ -117,7 +117,7 @@ g_targetDict = {
         'description' : 
             "Supported radios: TX16S, TX12, MT12, Zorro, Pocket, Boxer\n" +
             "Flash method: radio passthrough\n" + 
-            "  - connect to USB of your radio and select 'USB Serial (VCP)'\n" +
+            "  - connect to USB of your radio and select 'USB Serial (VCP)'\n\n" +
             "Wireless bridge: ESP8285\n" +
             "For flashing the wireless bridge:\n" +
             "  - connect to USB of your radio and select 'USB Serial (VCP)'\n",

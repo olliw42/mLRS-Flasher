@@ -932,7 +932,7 @@ class App(ctk.CTk):
         super().__init__()
 
         self.title('mLRS Flasher Desktop App '+app_version)
-        self.geometry('700x500')
+        self.geometry('800x600')
         #self.iconbitmap(os.path.join('assets','mLRS_logo_round.ico')) # does not work on Mac
         self.wm_iconbitmap()
         self.iconphoto(False, ImageTk.PhotoImage(file = os.path.join('assets','mLRS_logo_round.ico')))
@@ -1185,7 +1185,7 @@ class App(ctk.CTk):
         self.fTxModuleExternal_DeviceType_label.grid(row=wrow, column=0, padx=20, pady=20)
         self.fTxModuleExternal_DeviceType_menu = ctk.CTkOptionMenu(self.fTxModuleExternal,
             values=["downloading..."],
-            width=300, # this sets a min width, can grow larger
+            width=400, # this sets a min width, can grow larger
             #dynamic_resizing = False, # when false it prevents the box to grow with the entry
             command=self.fTxModuleExternal_DeviceType_menu_event)
         self.fTxModuleExternal_DeviceType_menu.grid(row=wrow, column=1, padx=(0,20), sticky="w")
@@ -1198,7 +1198,7 @@ class App(ctk.CTk):
         self.fTxModuleExternal_FirmwareVersion_label.grid(row=wrow, column=0, padx=20, pady=20)
         self.fTxModuleExternal_FirmwareVersion_menu = ctk.CTkOptionMenu(self.fTxModuleExternal,
             values=["downloading..."],
-            width=300,
+            width=400,
             command=self.fTxModuleExternal_FirmwareVersion_menu_event)
         self.fTxModuleExternal_FirmwareVersion_menu.grid(row=wrow, column=1, padx=(0,20), sticky="w")
         wrow += 1
@@ -1210,7 +1210,7 @@ class App(ctk.CTk):
         self.fTxModuleExternal_FirmwareFile_label.grid(row=wrow, column=0, padx=20, pady=20)
         self.fTxModuleExternal_FirmwareFile_menu = ctk.CTkOptionMenu(self.fTxModuleExternal,
             values=["downloading..."],
-            width=300,
+            width=400,
             command=self.fTxModuleExternal_FirmwareFile_menu_event)
         self.fTxModuleExternal_FirmwareFile_menu.grid(row=wrow, column=1, padx=(0,20), sticky="w")
         wrow += 1
@@ -1330,7 +1330,7 @@ class App(ctk.CTk):
         self.fReceiver_DeviceType_label.grid(row=wrow, column=0, padx=20, pady=20)
         self.fReceiver_DeviceType_menu = ctk.CTkOptionMenu(self.fReceiver,
             values=["downloading..."],
-            width=300,
+            width=400,
             command=self.fReceiver_DeviceType_menu_event)
         self.fReceiver_DeviceType_menu.grid(row=wrow, column=1, padx=(0,20), sticky="w")
         wrow += 1
@@ -1342,7 +1342,7 @@ class App(ctk.CTk):
         self.fReceiver_FirmwareVersion_label.grid(row=wrow, column=0, padx=20, pady=20)
         self.fReceiver_FirmwareVersion_menu = ctk.CTkOptionMenu(self.fReceiver,
             values=["downloading..."],
-            width=300,
+            width=400,
             command=self.fReceiver_FirmwareVersion_menu_event)
         self.fReceiver_FirmwareVersion_menu.grid(row=wrow, column=1, padx=(0,20), sticky="w")
         wrow += 1
@@ -1354,7 +1354,7 @@ class App(ctk.CTk):
         self.fReceiver_FirmwareFile_label.grid(row=wrow, column=0, padx=20, pady=20)
         self.fReceiver_FirmwareFile_menu = ctk.CTkOptionMenu(self.fReceiver,
             values=["downloading..."],
-            width=300,
+            width=400,
             command=self.fReceiver_FirmwareFile_menu_event)
         self.fReceiver_FirmwareFile_menu.grid(row=wrow, column=1, padx=(0,20), sticky="w")
         wrow += 1
@@ -1396,7 +1396,7 @@ class App(ctk.CTk):
         self.fTxModuleInternal_DeviceType_label.grid(row=wrow, column=0, padx=20, pady=20)
         self.fTxModuleInternal_DeviceType_menu = ctk.CTkOptionMenu(self.fTxModuleInternal,
             values=["downloading..."],
-            width=300,
+            width=400,
             command=self.fTxModuleInternal_DeviceType_menu_event)
         self.fTxModuleInternal_DeviceType_menu.grid(row=wrow, column=1, padx=(0,20), sticky="w")
         wrow += 1
@@ -1408,7 +1408,7 @@ class App(ctk.CTk):
         self.fTxModuleInternal_FirmwareVersion_label.grid(row=wrow, column=0, padx=20, pady=20)
         self.fTxModuleInternal_FirmwareVersion_menu = ctk.CTkOptionMenu(self.fTxModuleInternal,
             values=["downloading..."],
-            width=300,
+            width=400,
             command=self.fTxModuleInternal_FirmwareVersion_menu_event)
         self.fTxModuleInternal_FirmwareVersion_menu.grid(row=wrow, column=1, padx=(0,20), sticky="w")
         wrow += 1
@@ -1420,7 +1420,7 @@ class App(ctk.CTk):
         self.fTxModuleInternal_FirmwareFile_label.grid(row=wrow, column=0, padx=20, pady=20)
         self.fTxModuleInternal_FirmwareFile_menu = ctk.CTkOptionMenu(self.fTxModuleInternal,
             values=["downloading..."],
-            width=300,
+            width=400,
             command=self.fTxModuleInternal_FirmwareFile_menu_event)
         self.fTxModuleInternal_FirmwareFile_menu.grid(row=wrow, column=1, padx=(0,20), sticky="w")
         wrow += 1
@@ -1509,7 +1509,7 @@ class App(ctk.CTk):
         self.fLuaScript_FirmwareVersion_label.grid(row=wrow, column=0, padx=20, pady=20)
         self.fLuaScript_FirmwareVersion_menu = ctk.CTkOptionMenu(self.fLuaScript,
             values=["downloading..."],
-            width=300,
+            width=400,
             command=self.fLuaScript_FirmwareVersion_menu_event)
         self.fLuaScript_FirmwareVersion_menu.grid(row=wrow, column=1, padx=(0,20), sticky="w")
         wrow += 1
@@ -1521,7 +1521,7 @@ class App(ctk.CTk):
         self.fLuaScript_RadioScreen_label.grid(row=wrow, column=0, padx=20, pady=20)
         self.fLuaScript_RadioScreen_menu = ctk.CTkOptionMenu(self.fLuaScript,
             values=["downloading..."],
-            width=300,
+            width=400,
             command=self.fLuaScript_RadioScreen_menu_event)
         self.fLuaScript_RadioScreen_menu.grid(row=wrow, column=1, padx=(0,20), sticky="w")
         wrow += 1
