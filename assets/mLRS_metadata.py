@@ -89,8 +89,8 @@ g_targetDict = {
                 'Flash method: connect to USB (select COM port)\n\n' +
                 'Wireless bridge: ESP8285\n' +
                 'For flashing the wireless bridge: \n' +
-                '  - set SerDest to serial2\n' +
-                '  - set SerBaudrate to 115200\n' +
+                '  - set Tx SerDest to serial2\n' +
+                '  - set Tx SerBaudrate to 115200\n' +
                 '  - put Tx module into FLASH_ESP mode via OLED Actions page\n',
             'wireless' : {
                 'chipset' : 'esp8266',
