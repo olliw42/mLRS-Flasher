@@ -1222,7 +1222,8 @@ class App(ctk.CTk):
 
         self.fTxModuleExternal_Flash_button = ctk.CTkButton(self.fTxModuleExternal_fFlash,
             text = "Flash Tx Module",
-            command = self.fTxModuleExternal_Flash_button_event)
+            command = self.fTxModuleExternal_Flash_button_event,
+            fg_color="green")
         self.fTxModuleExternal_Flash_button.grid(row=0, column=0)
 
         self.fTxModuleExternal_ComPort_menu = CTkCompPortOptionMenu(self.fTxModuleExternal_fFlash,
@@ -1247,7 +1248,8 @@ class App(ctk.CTk):
 
         self.fTxModuleExternal_WirelessBridgeFlash_button = ctk.CTkButton(self.fTxModuleExternal_fWirelessBridge,
             text = "Flash Wireless Bridge",
-            command = self.fTxModuleExternal_WirelessBridgeFlash_button_event)
+            command = self.fTxModuleExternal_WirelessBridgeFlash_button_event,
+            fg_color="green")
         self.fTxModuleExternal_WirelessBridgeFlash_button.grid(row=1, column=0, pady=(20,0))
 
         #-- Description text box --
@@ -1362,7 +1364,8 @@ class App(ctk.CTk):
         # Flash Button
         self.fReceiver_Flash_button = ctk.CTkButton(self.fReceiver,
             text = "Flash Receiver",
-            command = self.fReceiver_Flash_button_event)
+            command = self.fReceiver_Flash_button_event,
+            fg_color="green")
         self.fReceiver_Flash_button.grid(row=wrow, column=0, columnspan=2, padx=20, pady=20)
 
     def fReceiver_DeviceType_menu_event(self, opt):
@@ -1428,7 +1431,8 @@ class App(ctk.CTk):
         # Flash Button
         self.fTxModuleInternal_Flash_button = ctk.CTkButton(self.fTxModuleInternal,
             text = "Flash Tx Module",
-            command = self.fTxModuleInternal_Flash_button_event)
+            command = self.fTxModuleInternal_Flash_button_event,
+            fg_color="green")
         self.fTxModuleInternal_Flash_button.grid(row=wrow, column=0, columnspan=2, padx=20, pady=20)
         wrow += 1
 
@@ -1446,7 +1450,8 @@ class App(ctk.CTk):
 
         self.fTxModuleInternal_WirelessBridgeFlash_button = ctk.CTkButton(self.fTxModuleInternal_fWirelessBridge,
             text = "Flash Wireless Bridge",
-            command = self.fTxModuleInternal_WirelessBridgeFlash_button_event)
+            command = self.fTxModuleInternal_WirelessBridgeFlash_button_event,
+            fg_color="green")
         self.fTxModuleInternal_WirelessBridgeFlash_button.grid(row=1, column=0, pady=(20,0))
 
         #-- Description text box --
@@ -1529,7 +1534,8 @@ class App(ctk.CTk):
         # Download Color Script Button
         self.fLuaScript_Download_button = ctk.CTkButton(self.fLuaScript,
             text = "Download Lua Script",
-            command = self.fLuaScript_Download_button_event)
+            command = self.fLuaScript_Download_button_event,
+            fg_color="green")
         self.fLuaScript_Download_button.grid(row=wrow, column=0, columnspan=2, padx=20, pady=20)
         wrow += 1
 
