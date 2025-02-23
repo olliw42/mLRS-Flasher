@@ -28,9 +28,12 @@ def find_radio_serial_ports():
         return None
     radioportList = []
     for port in portList:
+        print('*',port.device, port.name, port.description)
+        print(' ',port.hwid, port.vid, port.pid)
+        print(' ',port.manufacturer, port.location, port.product, port.interface)
         if port.vid == 0x0483 and port.pid == 0x5740:
             if os.name == 'posix': # we do have more info on this os
-                if port.manufacturer == 'OpenTX':
+                if port.manufacturer == 'OpenTX' or port.manufacturer == 'EdgeTX':
                     radioportList.append(port.device)
             else:
                 radioportList.append(port.device)
