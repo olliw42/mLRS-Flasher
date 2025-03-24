@@ -140,6 +140,20 @@ g_targetDict = {
                 'baud' : 115200,
             },
         },
+        'tx-radiomaster-ranger' : {
+            'description' :
+                "Flash method: connect to USB (select COM port)\n" +
+                "\nWireless bridge: ESP8285\n" +
+                "For flashing the wireless bridge: \n" +
+                "  - set 'Tx Ser Dest' to serial2\n" +
+                "  - set 'Tx Ser Baudrate' to 115200\n" +
+                "  - put Tx module into FLASH_ESP mode via OLED Actions page\n",
+            'wireless' : {
+                'chipset' : 'esp8266',
+                'reset' : 'no dtr',
+                'baud' : 115200,
+            },
+        },
         'tx-radiomaster-rp4td' : {
             'description' : "No description yet. Please see docs for details.\n",
         },
