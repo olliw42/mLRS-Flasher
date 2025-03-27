@@ -329,7 +329,7 @@ def flash_esptool_appassthru_win(programmer, serialx_no, firmware):
     F.write('@apInitPassthru.py -findbaud -c "COM%PORT%" -s '+str(serialx_no)+'\n')
     F.write('@if %ERRORLEVEL% GEQ 1 EXIT /B 1'+'\n')
     F.write('@if %ERRORLEVEL% LEQ 0 set /a BAUDRATE=-%ERRORLEVEL%'+'\n')
-    F.write('@apInitPassthru.py -c "COM%PORT%" -s '+str(serialx_no)+' -b %BAUDRATE% -nosysboot'+'\n')
+    F.write('@apInitPassthru.py -c "COM%PORT%" -s '+str(serialx_no)+' -b %BAUDRATE% -nosysboot -scripting'+'\n')
     F.write('@if %ERRORLEVEL% GEQ 1 EXIT /B 1'+'\n')
     F.write('@timeout /t 5 /nobreak'+'\n')
     esptool_args = flash_esptool_argstr(programmer, firmware, 'COM%PORT%', '%BAUDRATE%')
@@ -344,10 +344,11 @@ def flash_esptool_appassthru_win(programmer, serialx_no, firmware):
 
 
 def flash_esptool_appassthru(programmer, serialx_no, firmware):
-    comport, baudrate = appassthru.mlrs_open_passthrough(None, 57600, serialx_no)
+    comport, baudrate = appassthru.mlrs_open_passthrough(None, 57600, serialx_no, ['nosysboot', 'scripting'])
     #TODO: add a way to gracefully jump out in case of an error
     #print('waiting for 5 secs...')
     time.sleep(5.0)
+    temp_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'temp')
     flash_esptool(programmer, os.path.join(temp_path, firmware), comport, baudrate)
 
 

@@ -61,10 +61,9 @@ def find_ardupilot_serial_ports():
     '''
     apportList = []
     for port in portList:
-        if port.vid == 0x1209 and port.pid == 0x5740:
-            if 'ardupilot' in port.description.lower() and 'mavlink' in port.description.lower():
-                if 'ardupilot' in port.manufacturer.lower():
-                    apportList.append(port.device)
+        if port.vid == 0x1209 and (port.pid == 0x5740 or port.pid == 0x5741):
+            if 'ardupilot' in port.manufacturer.lower():
+                apportList.append(port.device)
     #print(apportList)
     return apportList
 
@@ -139,10 +138,10 @@ def ardupilot_find_serialx_baud(link, serialx):
         param_str.encode(), #b'SERIAL1_PROTOCOL',
         -1)
     _, msgd = mav_recv_match(link, 'PARAM_VALUE', timeout=1.0)
-    if not msgd or msgd['param_value'] != 2.0:
+    if not msgd or (msgd['param_value'] != 2.0 and msgd['param_value'] != 28.0):
         link.close()
         return None # something went wrong
-    # we do have that SRIALx, and it's MAVLink2
+    # we do have that SRIALx, and it's MAVLink2 or scripting which may be leftover from previous attempts
     param_str = 'SERIAL'+str(serialx)+'_BAUD'
     link.mav.param_request_read_send(
         link.target_system, link.target_component,
@@ -169,6 +168,11 @@ def ardupilot_find_serialx_baud(link, serialx):
 def ardupilot_open_passthrough(link, serialx, passthru_timeout=0):
     print('open serial passthrough...')
 
+    param_str = 'SERIAL'+str(serialx)+'_PROTOCOL'
+
+    # restore protocol to MAVLink2, takes effect only after reboot
+    print('  set '+param_str+' = MAVLink2')
+    mavparm.MAVParmDict().mavset(link, param_str, 2)
     # set up passthrough with no timeout, power cycle to exit
     print('  set SERIAL_PASSTIMO = '+str(passthru_timeout))
     mavparm.MAVParmDict().mavset(link, "SERIAL_PASSTIMO", passthru_timeout)
@@ -176,6 +180,19 @@ def ardupilot_open_passthrough(link, serialx, passthru_timeout=0):
     mavparm.MAVParmDict().mavset(link, "SERIAL_PASS2", serialx)
     time.sleep(1.5) # wait for passthrough to start, AP starts pt after 1 secs, which is so to allow the PARAM_SET to be seen
     print('serial passthrough opened')
+
+    
+def ardupilot_set_scripting(link, serialx):
+    print('set scripting...')
+
+    param_str = 'SERIAL'+str(serialx)+'_PROTOCOL'
+
+    # set up passthrough with no timeout, power cycle to exit
+    print('  set '+param_str+' = scripting')
+    mavparm.MAVParmDict().mavset(link, param_str, 28)
+    time.sleep(0.5) # wait a bit
+    link.close()
+    do_msg('Please unplug USB and hold Rx boot button while plugging in USB')
 
 
 #--------------------------------------------------
@@ -272,7 +289,7 @@ def mlrs_find_receiver_baud(apport, baudrate, serialx):
     return receiver_baud
 
 
-def mlrs_open_passthrough(comport, baudrate, serialx, options=''):
+def mlrs_open_passthrough(comport, baudrate, serialx, options=[]):
     print('------------------------------------------------------------')
     print('Find USB port of your flight controller')
     if comport:
@@ -296,6 +313,9 @@ def mlrs_open_passthrough(comport, baudrate, serialx, options=''):
         link.close()
         link = ardupilot_connect(apport, receiver_baud)
         time.sleep(0.5) # can't hurt
+    if 'scripting' in options:
+        ardupilot_set_scripting(link, serialx)
+        link = ardupilot_connect(apport, receiver_baud)
     print('------------------------------------------------------------')
     ardupilot_open_passthrough(link, serialx)
     print('------------------------------------------------------------')
@@ -323,6 +343,7 @@ if __name__ == '__main__':
     parser.add_argument("-findport", action='store_true', help = 'Find port')
     parser.add_argument("-findbaud", action='store_true', help = 'Find baudrate')
     parser.add_argument("-nosysboot", action='store_true', help = 'Do not put into system boot')
+    parser.add_argument("-scripting", action='store_true', help = 'Set scripting protocol first')
     args = parser.parse_args()
 
     comport = args.com
@@ -338,9 +359,11 @@ if __name__ == '__main__':
         print('APBAUDRATE='+str(receiver_baud)+';', file=sys.stderr)
         sys.exit(-receiver_baud) # report back SERIALx baudrate, for use in batch file
 
-    options = ''
+    options = []
     if args.nosysboot:
-        options = 'nosysboot'
+        options.append('nosysboot')
+    if args.scripting:
+        options.append('scripting')
     
     apport, receiver_baud = mlrs_open_passthrough(comport, baudrate, serialx, options)
     print('APPORT='+apport+';APBAUDRATE='+str(receiver_baud)+';', file=sys.stderr)
