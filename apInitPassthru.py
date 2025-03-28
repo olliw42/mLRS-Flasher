@@ -168,9 +168,8 @@ def ardupilot_find_serialx_baud(link, serialx):
 def ardupilot_open_passthrough(link, serialx, passthru_timeout=0):
     print('open serial passthrough...')
 
+    # restore protocol to MAVLink2 in case it was changed to scripting, takes effect only after reboot
     param_str = 'SERIAL'+str(serialx)+'_PROTOCOL'
-
-    # restore protocol to MAVLink2, takes effect only after reboot
     print('  set '+param_str+' = MAVLink2')
     mavparm.MAVParmDict().mavset(link, param_str, 2)
     # set up passthrough with no timeout, power cycle to exit
@@ -185,9 +184,8 @@ def ardupilot_open_passthrough(link, serialx, passthru_timeout=0):
 def ardupilot_set_scripting(link, serialx):
     print('set scripting...')
 
+    # set protocol to scripting to prevent MAVLink output from confusing the bootloader
     param_str = 'SERIAL'+str(serialx)+'_PROTOCOL'
-
-    # set up passthrough with no timeout, power cycle to exit
     print('  set '+param_str+' = scripting')
     mavparm.MAVParmDict().mavset(link, param_str, 28)
     time.sleep(0.5) # wait a bit
@@ -314,7 +312,7 @@ def mlrs_open_passthrough(comport, baudrate, serialx, options=[]):
         link = ardupilot_connect(apport, receiver_baud)
         time.sleep(0.5) # can't hurt
     if 'scripting' in options:
-        ardupilot_set_scripting(link, serialx)
+        ardupilot_set_scripting(link, serialx) # also closes link
         link = ardupilot_connect(apport, receiver_baud)
     print('------------------------------------------------------------')
     ardupilot_open_passthrough(link, serialx)
