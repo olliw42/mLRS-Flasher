@@ -433,7 +433,7 @@ def flashInternalElrsTxModule(programmer, firmware):
     #print(filename)
     #print(programmer)
     baudrate = 921600
-    radioport = radio.open_passthrough(baudrate)
+    radioport = radio.open_passthrough(None, baudrate, wirelessbridge = False)
 
     print()
     print('*** 3. Flashing the internal Tx Module ***')
@@ -459,7 +459,7 @@ def flashInternalElrsTxModuleWirelessBridge(programmer, firmware):
 
     #print(programmer)
     baudrate = 115200
-    radioport = radio.open_passthrough(baudrate, wirelessbridge = True)
+    radioport = radio.open_passthrough(None, baudrate, wirelessbridge = True)
 
     print()
     print('*** 3. Flashing the wireless bridge of the internal Tx Module ***')
