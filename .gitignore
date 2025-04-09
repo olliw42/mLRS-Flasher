@@ -8,6 +8,7 @@ build/*
 dist/*
 win_build/*
 win_dist/*
+thirdparty/esptool/esptool/__pycache__/
 tools/win_build/*
 tools/win_dist/*
 tools/venv/*
