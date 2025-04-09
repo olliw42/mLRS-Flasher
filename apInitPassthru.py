@@ -86,6 +86,7 @@ def find_ardupilot_serial_ports():
                 apportList.append(port.device)
     # TODO: on Lin/Mac we have to clean up the list to reject composite USB
     if os.name == 'posix':
+        apportList.sort() # sort should allow us to grab the lowest interface
         apportList = [apportList[0]] # let's just grab the first and hope for the best
     #print(apportList)
     return apportList
