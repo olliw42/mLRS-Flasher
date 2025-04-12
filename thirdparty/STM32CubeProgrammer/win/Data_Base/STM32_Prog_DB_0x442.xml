@@ -11,8 +11,6 @@
 		<Configurations>
 			<!-- JTAG_SWD Interface -->
 			<Interface name="JTAG_SWD"/>
-			<!-- Bootloader Interface -->
-			<Interface name="Bootloader"/>
 		</Configurations>
 		<!-- Peripherals -->
 		<Peripherals>
@@ -81,6 +79,8 @@
 										<Val value="0xBB">or any value other than 0xAA and 0xCC: Level 1, read protection</Val>
 										<Val value="0xCC">Level 2, chip protection</Val>
 									</Values>
+									<DefaultVal>0xAA</DefaultVal>
+									<ValLine>0x1</ValLine>
 								</Bit>
 							</AssignedBits>
 						</Field>
@@ -100,6 +100,8 @@
 										<Val value="0x0">Hardware watchdog</Val>
 										<Val value="0x1">Software watchdog</Val>
 									</Values>
+									<DefaultVal>0x1</DefaultVal>
+									<ValLine>0x1</ValLine>
 								</Bit>
 								<Bit>
 									<Name>nRST_STOP</Name>
@@ -111,6 +113,8 @@
 										<Val value="0x0">Reset generated when entering Stop mode</Val>
 										<Val value="0x1">No reset generated</Val>
 									</Values>
+									<DefaultVal>0x1</DefaultVal>
+									<ValLine>0x1</ValLine>
 								</Bit>
 								<Bit>
 									<Name>nRST_STDBY</Name>
@@ -122,6 +126,8 @@
 										<Val value="0x0">Reset generated when entering Standby mode</Val>
 										<Val value="0x1">No reset generated</Val>
 									</Values>
+									<DefaultVal>0x1</DefaultVal>
+									<ValLine>0x1</ValLine>
 								</Bit>
 								<Bit>
 									<Name>nBOOT0</Name>
@@ -133,6 +139,7 @@
 										<Val value="0x0">BOOT0 = 1, boot memory depends on nBOOT1 value</Val>
 										<Val value="0x1">BOOT0 = 0, boot from main flash memory</Val>
 									</Values>
+									<DefaultVal>0x1</DefaultVal>
 								</Bit>
 								<Bit>
 									<Name>nBOOT1</Name>
@@ -144,6 +151,8 @@
 										<Val value="0x0">Boot from embedded SRAM1 when BOOT0=1</Val>
 										<Val value="0x1">Boot from system memory when BOOT0=1</Val>
 									</Values>
+									<DefaultVal>0x1</DefaultVal>
+									<ValLine>0x1</ValLine>
 								</Bit>
 								<Bit>
 									<Name>VDDA_MONITOR</Name>
@@ -155,6 +164,8 @@
 										<Val value="0x0">VDDA power supply supervisor disabled</Val>
 										<Val value="0x1">VDDA power supply supervisor enabled</Val>
 									</Values>
+									<DefaultVal>0x1</DefaultVal>
+									<ValLine>0x1</ValLine>
 								</Bit>
 								<Bit>
 									<Name>RAM_PARITY</Name>
@@ -166,6 +177,8 @@
 										<Val value="0x0">RAM parity check enabled</Val>
 										<Val value="0x1">RAM parity check disabled</Val>
 									</Values>
+									<DefaultVal>0x1</DefaultVal>
+									<ValLine>0x1</ValLine>
 								</Bit>
 								<Bit>
 									<Name>BOOT_SEL</Name>
@@ -177,6 +190,7 @@
 										<Val value="0x0">BOOT0 signal is defined by nBOOT0 option bit</Val>
 										<Val value="0x1">BOOT0 signal is defined by BOOT0 pin value</Val>
 									</Values>
+									<DefaultVal>0x1</DefaultVal>
 								</Bit>
 							</AssignedBits>
 						</Field>
@@ -192,6 +206,8 @@
 									<BitOffset>0x0</BitOffset>
 									<BitWidth>0x8</BitWidth>
 									<Access>RW</Access>
+									<DefaultVal>0xFF</DefaultVal>
+									<ValLine>0x1</ValLine>
 								</Bit>
 								<Bit>
 									<Name>Data1</Name>
@@ -199,11 +215,13 @@
 									<BitOffset>0x10</BitOffset>
 									<BitWidth>0x8</BitWidth>
 									<Access>RW</Access>
+									<DefaultVal>0xFF</DefaultVal>
+									<ValLine>0x1</ValLine>
 								</Bit>
 							</AssignedBits>
 						</Field>
 					</Category>
-					<Category>
+                    <Category>
 						<Name>Write Protection</Name>
 						<Field>
 							<Parameters address="0x1FFFF808" name="WRP_0_1" size="0x4"/>
@@ -212,23 +230,209 @@
 									<Name>nWRP0</Name>
 									<Description/>
 									<BitOffset>0x0</BitOffset>
-									<BitWidth>0x8</BitWidth>
+									<BitWidth>0x1</BitWidth>
 									<Access>RW</Access>
-									<Values ByBit="true">
+									<Values>
 										<Val value="0x0">Write protection active on this sector</Val>
 										<Val value="0x1">Write protection not active on this sector</Val>
 									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+							    <Bit>
+									<Name>nWRP1</Name>
+									<Description/>
+									<BitOffset>0x1</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP2</Name>
+									<Description/>
+									<BitOffset>0x2</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP3</Name>
+									<Description/>
+									<BitOffset>0x3</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP4</Name>
+									<Description/>
+									<BitOffset>0x4</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP5</Name>
+									<Description/>
+									<BitOffset>0x5</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP6</Name>
+									<Description/>
+									<BitOffset>0x6</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP7</Name>
+									<Description/>
+									<BitOffset>0x7</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
 								</Bit>
 								<Bit>
 									<Name>nWRP8</Name>
 									<Description/>
 									<BitOffset>0x10</BitOffset>
-									<BitWidth>0x8</BitWidth>
+									<BitWidth>0x1</BitWidth>
 									<Access>RW</Access>
-									<Values ByBit="true">
+									<Values>
 										<Val value="0x0">Write protection active on this sector</Val>
 										<Val value="0x1">Write protection not active on this sector</Val>
 									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP9</Name>
+									<Description/>
+									<BitOffset>0x11</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP10</Name>
+									<Description/>
+									<BitOffset>0x12</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP11</Name>
+									<Description/>
+									<BitOffset>0x13</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP12</Name>
+									<Description/>
+									<BitOffset>0x14</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP13</Name>
+									<Description/>
+									<BitOffset>0x15</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP14</Name>
+									<Description/>
+									<BitOffset>0x16</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP15</Name>
+									<Description/>
+									<BitOffset>0x17</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
 								</Bit>
 							</AssignedBits>
 						</Field>
@@ -239,28 +443,213 @@
 									<Name>nWRP16</Name>
 									<Description/>
 									<BitOffset>0x0</BitOffset>
-									<BitWidth>0x8</BitWidth>
+									<BitWidth>0x1</BitWidth>
 									<Access>RW</Access>
-									<Values ByBit="true">
+									<Values>
 										<Val value="0x0">Write protection active on this sector</Val>
 										<Val value="0x1">Write protection not active on this sector</Val>
 									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP17</Name>
+									<Description/>
+									<BitOffset>0x1</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP18</Name>
+									<Description/>
+									<BitOffset>0x2</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP19</Name>
+									<Description/>
+									<BitOffset>0x3</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP20</Name>
+									<Description/>
+									<BitOffset>0x4</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP21</Name>
+									<Description/>
+									<BitOffset>0x5</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP22</Name>
+									<Description/>
+									<BitOffset>0x6</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP23</Name>
+									<Description/>
+									<BitOffset>0x7</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
 								</Bit>
 								<Bit>
 									<Name>nWRP24</Name>
 									<Description/>
 									<BitOffset>0x10</BitOffset>
-									<BitWidth>0x8</BitWidth>
+									<BitWidth>0x1</BitWidth>
 									<Access>RW</Access>
-									<Values ByBit="true">
+									<Values>
 										<Val value="0x0">Write protection active on this sector</Val>
 										<Val value="0x1">Write protection not active on this sector</Val>
 									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP25</Name>
+									<Description/>
+									<BitOffset>0x11</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP26</Name>
+									<Description/>
+									<BitOffset>0x12</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP27</Name>
+									<Description/>
+									<BitOffset>0x13</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP28</Name>
+									<Description/>
+									<BitOffset>0x14</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP29</Name>
+									<Description/>
+									<BitOffset>0x15</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP30</Name>
+									<Description/>
+									<BitOffset>0x16</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
+								</Bit>
+								<Bit>
+									<Name>nWRP31</Name>
+									<Description/>
+									<BitOffset>0x17</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+									<Values>
+										<Val value="0x0">Write protection active on this sector</Val>
+										<Val value="0x1">Write protection not active on this sector</Val>
+									</Values>
+									<DefaultVal>0x0</DefaultVal>
+									<ValLine>0x1</ValLine>
 								</Bit>
 							</AssignedBits>
 						</Field>
-					</Category>
-				</Bank>
+					</Category></Bank>
 			</Peripheral>
 		</Peripherals>
 	</Device>

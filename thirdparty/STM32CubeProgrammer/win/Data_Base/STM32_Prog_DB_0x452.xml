@@ -11,25 +11,7 @@
 		<Configurations>
 			<!-- JTAG_SWD Interface -->
 			<Interface name="JTAG_SWD">
-				<Configuration number="0x0"> <!-- ROM Die -->
-					<RomLess>
-						<ReadRegister address="0x1FF07A22" mask="0x40" value="0x00"/>
-					</RomLess>
-				</Configuration>
-				<Configuration number="0x1"> <!-- RomLess Die -->
-					<RomLess>
-						<ReadRegister address="0x1FF07A22" mask="0x40" value="0x40"/>
-					</RomLess>
-				</Configuration>
 			</Interface>
-			<!-- Bootloader Interface -->
-			<Interface name="Bootloader">
-				<Configuration number="0x0"> <!-- ROM Die -->
-					<RomLess>
-						<ReadRegister address="0x0x08000000" mask="0x00" value="0x00"/>
-					</RomLess>
-				</Configuration>
-			</Interface>	
 		</Configurations>
 		<!-- Peripherals -->
 		<Peripherals>
@@ -194,6 +176,7 @@
 										<Val value="0xBB">or any value other than 0xAA and 0xCC: Level 1, read protection</Val>
 										<Val value="0xCC">Level 2, chip protection</Val>
 									</Values>
+									<DefaultVal>0xAA</DefaultVal>
 								</Bit>
 							</AssignedBits>
 						</Field>
@@ -215,6 +198,7 @@
 										<Val value="0x2">BOR Level 1 (VBOR1), brownout threshold level 1</Val>
 										<Val value="0x3">BOR off, POR/PDR reset threshold level is applied</Val>
 									</Values>
+									<DefaultVal>0x3</DefaultVal>
 								</Bit>
 							</AssignedBits>
 						</Field>
@@ -234,6 +218,7 @@
 										<Val value="0x0">Freeze IWDG counter in stop mode</Val>
 										<Val value="0x1">IWDG counter active in stop mode</Val>
 									</Values>
+									<DefaultVal>0x1</DefaultVal>
 								</Bit>
 								<Bit>
 									<Name>IWDG_STDBY</Name>
@@ -245,6 +230,7 @@
 										<Val value="0x0">Freeze IWDG counter in standby mode</Val>
 										<Val value="0x1">IWDG counter active in standby mode</Val>
 									</Values>
+									<DefaultVal>0x1</DefaultVal>
 								</Bit>
 								<Bit>
 									<Name>WWDG_SW</Name>
@@ -256,6 +242,7 @@
 										<Val value="0x0">Hardware window watchdog</Val>
 										<Val value="0x1">Software window watchdog</Val>
 									</Values>
+									<DefaultVal>0x1</DefaultVal>
 								</Bit>
 								<Bit>
 									<Name>IWDG_SW</Name>
@@ -267,6 +254,7 @@
 										<Val value="0x0">Hardware independent watchdog</Val>
 										<Val value="0x1">Software independent watchdog</Val>
 									</Values>
+									<DefaultVal>0x1</DefaultVal>
 								</Bit>
 								<Bit>
 									<Name>nRST_STOP</Name>
@@ -278,6 +266,7 @@
 										<Val value="0x0">Reset generated when entering Stop mode</Val>
 										<Val value="0x1">No reset generated</Val>
 									</Values>
+									<DefaultVal>0x1</DefaultVal>
 								</Bit>
 								<Bit>
 									<Name>nRST_STDBY</Name>
@@ -289,6 +278,7 @@
 										<Val value="0x0">Reset generated when entering Standby mode</Val>
 										<Val value="0x1">No reset generated</Val>
 									</Values>
+									<DefaultVal>0x1</DefaultVal>
 								</Bit>
 							</AssignedBits>
 						</Field>
@@ -305,6 +295,7 @@
 										<Val value="0x0">PCROP zone is kept when RDP is decreased</Val>
 										<Val value="0x1">PCROP zone is erased when RDP is decreased</Val>
 									</Values>
+									<DefaultVal>0x1</DefaultVal>
 								</Bit>
 							</AssignedBits>
 						</Field>
@@ -321,6 +312,7 @@
 									<BitWidth>0x10</BitWidth>
 									<Access>RW</Access>
 									<Equation multiplier="0x4000" offset="0x0"/>
+									<DefaultVal>0x0080</DefaultVal>
 								</Bit>
 								<Bit>
 									<Name>BOOT_ADD1</Name>
@@ -329,6 +321,7 @@
 									<BitWidth>0x10</BitWidth>
 									<Access>RW</Access>
 									<Equation multiplier="0x4000" offset="0x0"/>
+									<DefaultVal>0x0040</DefaultVal>
 								</Bit>
 							</AssignedBits>
 						</Field>
@@ -338,7 +331,7 @@
 						<Field>
 							<Parameters address="0x40023C14" name="FLASH_OPTCR" size="0x4"/>
 							<AssignedBits>
-								<Bit config="0">
+								<Bit>
 									<Name>nWRP0</Name>
 									<Description/>
 									<BitOffset>0x10</BitOffset>
@@ -348,17 +341,7 @@
 										<Val value="0x0">Write protection active on this sector</Val>
 										<Val value="0x1">Write protection not active on this sector</Val>
 									</Values>
-								</Bit>
-								<Bit config="1">
-									<Name>nWRP0</Name>
-									<Description/>
-									<BitOffset>0x10</BitOffset>
-									<BitWidth>0x4</BitWidth>
-									<Access>RW</Access>
-									<Values ByBit="true">
-										<Val value="0x0">Write protection active on this sector</Val>
-										<Val value="0x1">Write protection not active on this sector</Val>
-									</Values>
+									<DefaultVal>0x1</DefaultVal>
 								</Bit>
 							</AssignedBits>
 						</Field>
@@ -368,7 +351,7 @@
 						<Field>
 							<Parameters address="0x40023C1C" name="FLASH_OPTCR2" size="0x4"/>
 							<AssignedBits>
-								<Bit config="0">
+								<Bit>
 									<Name>PCROP0</Name>
 									<Description/>
 									<BitOffset>0x0</BitOffset>
@@ -378,229 +361,13 @@
 										<Val value="0x0">PCROP protection not active on this sector</Val>
 										<Val value="0x1">PCROP protection active on this sector</Val>
 									</Values>
-								</Bit>
-								<Bit config="1">
-									<Name>PCROP0</Name>
-									<Description/>
-									<BitOffset>0x0</BitOffset>
-									<BitWidth>0x4</BitWidth>
-									<Access>RW</Access>
-									<Values ByBit="true">
-										<Val value="0x0">PCROP protection not active on this sector</Val>
-										<Val value="0x1">PCROP protection active on this sector</Val>
-									</Values>
+									<DefaultVal>0x1</DefaultVal>
 								</Bit>
 							</AssignedBits>
 						</Field>
 					</Category>
 				</Bank>
-				<Bank interface="Bootloader">
-					<Parameters address="0x1FFF0000" name="Bank 1" size="0x2C"/>
-					<Category>
-						<Name>Read Out Protection</Name>
-						<Field>
-							<Parameters address="0x1FFF0000" name="FLASH_OPTCR" size="0x4"/>
-							<AssignedBits>
-								<Bit>
-									<Name>RDP</Name>
-									<Description>Read protection option byte. The read protection is used to protect the software code stored in Flash memory.</Description>
-									<BitOffset>0x8</BitOffset>
-									<BitWidth>0x8</BitWidth>
-									<Access>RW</Access>
-									<Values>
-										<Val value="0xAA">Level 0, no protection</Val>
-										<Val value="0xBB">or any value other than 0xAA and 0xCC: Level 1, read protection</Val>
-										<Val value="0xCC">Level 2, chip protection</Val>
-									</Values>
-								</Bit>
-							</AssignedBits>
-						</Field>
-					</Category>
-					<Category>
-						<Name>BOR Level</Name>
-						<Field>
-							<Parameters address="0x1FFF0000" name="FLASH_OPTCR" size="0x4"/>
-							<AssignedBits>
-								<Bit>
-									<Name>BOR_LEV</Name>
-									<Description>These bits contain the supply level threshold that activates/releases the reset. They can be written to program a new BOR level value into Flash memory</Description>
-									<BitOffset>0x2</BitOffset>
-									<BitWidth>0x2</BitWidth>
-									<Access>RW</Access>
-									<Values>
-										<Val value="0x0">BOR Level 3 (VBOR3), brownout threshold level 3</Val>
-										<Val value="0x1">BOR Level 2 (VBOR2), brownout threshold level 2</Val>
-										<Val value="0x2">BOR Level 1 (VBOR1), brownout threshold level 1</Val>
-										<Val value="0x3">BOR off, POR/PDR reset threshold level is applied</Val>
-									</Values>
-								</Bit>
-							</AssignedBits>
-						</Field>
-					</Category>
-					<Category>
-						<Name>User Configuration</Name>
-						<Field>
-							<Parameters address="0x1FFF0008" name="FLASH_OPTCR" size="0x4"/>
-							<AssignedBits>
-								<Bit>
-									<Name>IWDG_STOP</Name>
-									<Description/>
-									<BitOffset>0xF</BitOffset>
-									<BitWidth>0x1</BitWidth>
-									<Access>RW</Access>
-									<Values>
-										<Val value="0x0">Freeze IWDG counter in stop mode</Val>
-										<Val value="0x1">IWDG counter active in stop mode</Val>
-									</Values>
-								</Bit>
-								<Bit>
-									<Name>IWDG_STDBY</Name>
-									<Description/>
-									<BitOffset>0xE</BitOffset>
-									<BitWidth>0x1</BitWidth>
-									<Access>RW</Access>
-									<Values>
-										<Val value="0x0">Freeze IWDG counter in standby mode</Val>
-										<Val value="0x1">IWDG counter active in standby mode</Val>
-									</Values>
-								</Bit>
-							</AssignedBits>
-						</Field>
-						<Field>
-							<Parameters address="0x1FFF0000" name="FLASH_OPTCR" size="0x4"/>
-							<AssignedBits>
-								<Bit>
-									<Name>WWDG_SW</Name>
-									<Description/>
-									<BitOffset>0x4</BitOffset>
-									<BitWidth>0x1</BitWidth>
-									<Access>RW</Access>
-									<Values>
-										<Val value="0x0">Hardware window watchdog</Val>
-										<Val value="0x1">Software window watchdog</Val>
-									</Values>
-								</Bit>
-								<Bit>
-									<Name>IWDG_SW</Name>
-									<Description/>
-									<BitOffset>0x5</BitOffset>
-									<BitWidth>0x1</BitWidth>
-									<Access>RW</Access>
-									<Values>
-										<Val value="0x0">Hardware independent watchdog</Val>
-										<Val value="0x1">Software independent watchdog</Val>
-									</Values>
-								</Bit>
-								<Bit>
-									<Name>nRST_STOP</Name>
-									<Description/>
-									<BitOffset>0x6</BitOffset>
-									<BitWidth>0x1</BitWidth>
-									<Access>RW</Access>
-									<Values>
-										<Val value="0x0">Reset generated when entering Stop mode</Val>
-										<Val value="0x1">No reset generated</Val>
-									</Values>
-								</Bit>
-								<Bit>
-									<Name>nRST_STDBY</Name>
-									<Description/>
-									<BitOffset>0x7</BitOffset>
-									<BitWidth>0x1</BitWidth>
-									<Access>RW</Access>
-									<Values>
-										<Val value="0x0">Reset generated when entering Standby mode</Val>
-										<Val value="0x1">No reset generated</Val>
-									</Values>
-								</Bit>
-							</AssignedBits>
-						</Field>
-						<Field>
-							<Parameters address="0x1FFF0028" name="FLASH_OPTCR2" size="0x4"/>
-							<AssignedBits>
-								<Bit>
-									<Name>PCROP_RDP</Name>
-									<Description/>
-									<BitOffset>0xF</BitOffset>
-									<BitWidth>0x1</BitWidth>
-									<Access>RW</Access>
-									<Values>
-										<Val value="0x0">PCROP zone is kept when RDP is decreased</Val>
-										<Val value="0x1">PCROP zone is erased when RDP is decreased</Val>
-									</Values>
-								</Bit>
-							</AssignedBits>
-						</Field>
-					</Category>
-					<Category>
-						<Name>Boot address Option Bytes</Name>
-						<Field>
-							<Parameters address="0x1FFF0010" name="FLASH_OPTCR1" size="0x4"/>
-							<AssignedBits>
-								<Bit>
-									<Name>BOOT_ADD0</Name>
-									<Description>Define the boot address when BOOT0=0</Description>
-									<BitOffset>0x0</BitOffset>
-									<BitWidth>0x10</BitWidth>
-									<Access>RW</Access>
-									<Equation multiplier="0x4000" offset="0x0"/>
-								</Bit>
-							</AssignedBits>
-						</Field>
-						<Field>
-							<Parameters address="0x1FFF0018" name="FLASH_OPTCR1" size="0x4"/>
-							<AssignedBits>
-								<Bit>
-									<Name>BOOT_ADD1</Name>
-									<Description>Define the boot address when BOOT0=1</Description>
-									<BitOffset>0x0</BitOffset>
-									<BitWidth>0x10</BitWidth>
-									<Access>RW</Access>
-									<Equation multiplier="0x4000" offset="0x0"/>
-								</Bit>
-							</AssignedBits>
-						</Field>
-					</Category>
-					<Category>
-						<Name>Write Protection</Name>
-						<Field>
-							<Parameters address="0x1FFF0008" name="FLASH_OPTCR1" size="0x4"/>
-							<AssignedBits>
-								<Bit>
-									<Name>nWRP0</Name>
-									<Description/>
-									<BitOffset>0x0</BitOffset>
-									<BitWidth>0x8</BitWidth>
-									<Access>RW</Access>
-									<Values ByBit="true">
-										<Val value="0x0">Write protection active on this sector</Val>
-										<Val value="0x1">Write protection not active on this sector</Val>
-									</Values>
-								</Bit>
-							</AssignedBits>
-						</Field>
-					</Category>
-					<Category>
-						<Name>Read/Write Protection</Name>
-						<Field>
-							<Parameters address="0x1FFF0020" name="FLASH_OPTCR2" size="0x4"/>
-							<AssignedBits>
-								<Bit>
-									<Name>PCROP0</Name>
-									<Description/>
-									<BitOffset>0x0</BitOffset>
-									<BitWidth>0x8</BitWidth>
-									<Access>RW</Access>
-									<Values ByBit="true">
-										<Val value="0x0">PCROP protection not active on this sector</Val>
-										<Val value="0x1">PCROP protection active on this sector</Val>
-									</Values>
-								</Bit>
-							</AssignedBits>
-						</Field>
-					</Category>
-				</Bank>
-			</Peripheral>
+            </Peripheral>
 		</Peripherals>
 	</Device>
 </Root>
