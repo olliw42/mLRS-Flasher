@@ -285,6 +285,9 @@ g_targetDict = {
         'rx-generic-c3' : {
             'chipset' : 'esp32c3',
         },
+        'rx-generic-lr1121-td' : {
+            'chipset' : 'esp32',
+        },
     },
 }
 
