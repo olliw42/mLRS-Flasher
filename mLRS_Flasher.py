@@ -10,7 +10,7 @@
 #************************************************************
 app_version = '11.04.2025-001'
 
-import os, sys, time
+import os, platform, sys, time
 import subprocess
 import re
 
@@ -35,7 +35,7 @@ Venv
 --------------------------------------------------
 '''
 
-def setup_virtualenv():
+def setup_virtualenv_win():
     """Creates and sets up a virtual environment using venv."""
     # Create virtual environment
     subprocess.run(["python", "-m", "venv", "venv"], check=True)
@@ -48,6 +48,30 @@ def setup_virtualenv():
     # Install required modules
     subprocess.run(["venv\\Scripts\\python", "-m", "pip", "install", "pillow", "requests", "pyserial", "customtkinter", "tk"], check=True)
     print("Required modules installed.")
+
+def setup_virtualenv_mac():
+    """Recursively removes the quarantine attribute from all files in the given directory."""
+    for root, dirs, files in os.walk(os.getcwd()):
+        for name in dirs + files:
+            file_path = os.path.join(root, name)
+            try:
+                subprocess.run(["xattr", "-d", "com.apple.quarantine", file_path], check=True, stderr=subprocess.DEVNULL)
+                print(f"Removed quarantine from: {file_path}")
+            except subprocess.CalledProcessError:
+                print(f"Failed to remove quarantine from: {file_path}")
+                
+    """Creates and sets up a virtual environment using virtualenv."""
+    subprocess.run(["virtualenv", "--python=/opt/homebrew/bin/python3", "venv"], check=True)
+    print("Virtual environment created using Homebrew's Python.")
+    
+    subprocess.run(["venv/bin/python", "-m", "pip", "install", "--upgrade", "pip"], check=True)
+    print("Pip upgraded.")
+    
+    subprocess.run(["venv/bin/python", "-m", "pip", "install", "pillow", "requests", "pyserial", "customtkinter", "tk"], check=True)
+    print("Required modules installed including Tkinter in virtual environment.")
+    
+    subprocess.run(["brew", "install", "python-tk"], check=True)
+    print("python-tk installed via Homebrew.")
 
 '''
 --------------------------------------------------
@@ -1939,13 +1963,14 @@ class App(ctk.CTk):
 #--------------------------------------------------
 
 if __name__ == "__main__":
-    if os.name == 'nt':
-        # Check if venv folder exists before running run_flasher
-        if os.path.isdir("venv"):
-            print("Virtual environment found, running flasher script...")
-        else:
-            print("Virtual environment not found. Setting up virtual environment...")
-            setup_virtualenv()
+    if os.path.isdir("venv"):
+        print("Virtual environment found, running flasher script...")
+    else:
+        if platform.system() == 'Windows':
+            setup_virtualenv_win()
+        elif platform.system() == 'Darwin':
+            setup_virtualenv_mac()
+
     app = App()
     app.update()
     app.after(10,app.after_startup())

@@ -1,3 +1,0 @@
-Command to create the Windows Exe, paths may have to be modified.
-
-pyinstaller --noconfirm --onefile --windowed --icon "\mLRS-Flasher\assets\mLRS_logo_round.ico"  "\mLRS-Flasher\run_mLRS_Flasher_win.py"
