@@ -73,6 +73,20 @@ def setup_virtualenv_mac():
     subprocess.run(["brew", "install", "python-tk"], check=True)
     print("python-tk installed via Homebrew.")
 
+def setup_virtualenv_linux():
+    """Creates and sets up a virtual environment using venv on Linux."""
+    # Create virtual environment
+    subprocess.run(["python3", "-m", "venv", "venv"], check=True)
+    print("Virtual environment created.")
+    
+    # Upgrade pip
+    subprocess.run(["venv/bin/python", "-m", "pip", "install", "--upgrade", "pip"], check=True)
+    print("Pip upgraded.")
+    
+    # Install required modules
+    subprocess.run(["venv/bin/python", "-m", "pip", "install", "pillow", "requests", "pyserial", "customtkinter", "tk"], check=True)
+    print("Required modules installed.")
+
 '''
 --------------------------------------------------
 Tools
