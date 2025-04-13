@@ -49,11 +49,6 @@ def setup_virtualenv():
     subprocess.run(["venv\\Scripts\\python", "-m", "pip", "install", "pillow", "requests", "pyserial", "customtkinter", "tk"], check=True)
     print("Required modules installed.")
 
-def run_flasher():
-    """Runs the mLRS_Flasher.py script within the virtual environment."""
-    subprocess.run(["venv\\Scripts\\pythonw", "mLRS_Flasher.py"], check=True)
-    print("mLRS_Flasher.py executed successfully.")
-
 '''
 --------------------------------------------------
 Tools
@@ -1948,11 +1943,9 @@ if __name__ == "__main__":
         # Check if venv folder exists before running run_flasher
         if os.path.isdir("venv"):
             print("Virtual environment found, running flasher script...")
-            run_flasher()
         else:
             print("Virtual environment not found. Setting up virtual environment...")
             setup_virtualenv()
-            run_flasher()
     app = App()
     app.update()
     app.after(10,app.after_startup())
