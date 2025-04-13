@@ -1984,6 +1984,8 @@ if __name__ == "__main__":
             setup_virtualenv_win()
         elif platform.system() == 'Darwin':
             setup_virtualenv_mac()
+        elif platform.system() == 'Linux':
+            setup_virtualenv_linux()
 
     app = App()
     app.update()
