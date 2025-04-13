@@ -29,6 +29,36 @@ import assets.mLRS_metadata as mlrs_md
 import apInitPassthru as appassthru
 import edgetxInitPassthru as radio
 
+'''
+--------------------------------------------------
+Venv
+--------------------------------------------------
+'''
+
+def setup_virtualenv():
+    """Creates and sets up a virtual environment using venv."""
+    # Create virtual environment
+    subprocess.run(["python", "-m", "venv", "venv"], check=True)
+    print("Virtual environment created.")
+    
+    # Upgrade pip
+    subprocess.run(["venv\\Scripts\\python", "-m", "pip", "install", "--upgrade", "pip"], check=True)
+    print("Pip upgraded.")
+    
+    # Install required modules
+    subprocess.run(["venv\\Scripts\\python", "-m", "pip", "install", "pillow", "requests", "pyserial", "customtkinter", "tk"], check=True)
+    print("Required modules installed.")
+
+def run_flasher():
+    """Runs the mLRS_Flasher.py script within the virtual environment."""
+    subprocess.run(["venv\\Scripts\\pythonw", "mLRS_Flasher.py"], check=True)
+    print("mLRS_Flasher.py executed successfully.")
+
+'''
+--------------------------------------------------
+Tools
+--------------------------------------------------
+'''
 
 ctk.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 #ctk.set_default_color_theme("green")
@@ -1914,6 +1944,15 @@ class App(ctk.CTk):
 #--------------------------------------------------
 
 if __name__ == "__main__":
+    if os.name == 'nt':
+        # Check if venv folder exists before running run_flasher
+        if os.path.isdir("venv"):
+            print("Virtual environment found, running flasher script...")
+            run_flasher()
+        else:
+            print("Virtual environment not found. Setting up virtual environment...")
+            setup_virtualenv()
+            run_flasher()
     app = App()
     app.update()
     app.after(10,app.after_startup())
