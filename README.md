@@ -13,7 +13,7 @@ mLRSFlasher is based on Python, and thus needs a full Python3 installation on yo
 
 - Install Python3 on your system, if you don't yet have it. Ensure that Python is in the PATH (the usual Python installation tutorials tell how to check that).
 - Download the github repo and ensure you have unpacked it if you downloaded it as zip.
-- Run ```mLRS_Flasher_win.exe```.
+- Run ```mLRS_Flasher_.py```.
 > [!NOTE]
 > - The first launch will take approximately 1 minute as the virtual environment is being created.
 
@@ -32,8 +32,12 @@ pip install virtualenv
 #### Run the Flasher ####
 
 ````
-./run_mLRS_Flasher_mac.py
+Run ```./mLRS_Flasher_.py```.
 ````
+
+> [!NOTE]
+> - The first launch will take approximately 1 minute as the virtual environment is being created.
+> - If you see a blank screen on the first launch, try closing and running ```./mLRS_Flasher_.py``` again.
 
 ### Linux ###
 
