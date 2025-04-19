@@ -48,14 +48,6 @@ else
     status "✅ Virtualenv already installed."
 fi
 
-# Colors
-GREEN='\033[1;32m'
-NC='\033[0m'
-
-status() {
-    echo -e "${GREEN}$1${NC}"
-}
-
 # Add Homebrew Python to PATH in ~/.zprofile if not already present
 add_python_to_path() {
     local zprofile="$HOME/.zprofile"
