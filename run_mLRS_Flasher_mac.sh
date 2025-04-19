@@ -10,7 +10,7 @@ function status() {
 
 # Check if Homebrew is installed
 if ! command -v brew &> /dev/null; then
-    status "Installing Homebrew."
+    status "🔧 Installing Homebrew."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
     # Add Homebrew to PATH for this script (Apple Silicon vs Intel paths)
@@ -32,7 +32,7 @@ fi
 
 # Install Python if not present
 if ! command -v python3 &> /dev/null; then
-    status "Installing Python via Homebrew."
+    status "🔧 Installing Python via Homebrew."
     brew install python
     status "✅ Python3 installed."
 else
@@ -41,7 +41,7 @@ fi
 
 # Install virtualenv if not present
 if ! command -v virtualenv &> /dev/null; then
-    status "Installing virtualenv."
+    status "🔧 Installing virtualenv."
     brew install virtualenv
     status "✅ Virtualenv installed."
 else
@@ -75,16 +75,16 @@ remove_quarantine_attribute() {
 
 # Set up a virtual environment and install dependencies
 setup_virtualenv() {
-    status "Creating virtual environment."
+    status "🔧 Creating virtual environment."
     virtualenv --python="$(which python)" venv
 
-    status "⬆Upgrading pip."
+    status "🔧 Upgrading pip."
     ./venv/bin/python -m pip install --upgrade pip
 
-    status "Installing Python packages."
+    status "🔧 Installing Python packages."
     ./venv/bin/pip install pillow requests pyserial customtkinter tk
 
-    status "Installing python-tk via Homebrew (if needed)."
+    status "🔧 Installing python-tk via Homebrew (if needed)."
     brew install python-tk || true
 }
 
@@ -99,7 +99,7 @@ if [ -d "venv" ]; then
     status "✅ Virtual environment already exists. Launching flasher."
     run_flasher
 else
-    status "Virtual environment not found. Preparing environment."
+    status "🔧 Virtual environment not found. Preparing environment."
     add_python_to_path
     remove_quarantine_attribute "$(pwd)"
     setup_virtualenv
