@@ -43,9 +43,9 @@ fi
 if ! command -v virtualenv &> /dev/null; then
     status "Installing virtualenv..."
     brew install virtualenv
-    status "✅ virtualenv installed."
+    status "✅ Virtualenv installed."
 else
-    status "✅ virtualenv already installed."
+    status "✅ Virtualenv already installed."
 fi
 
 # Colors
