@@ -18,20 +18,10 @@ mLRSFlasher is based on Python, and thus needs a full Python3 installation on yo
 
 ### MacOS ###
 
-#### Prerequisites ####
-
-Open the terminal and run the following commands to install Brew, Python and the virtualenv module - this only needs to be done once.
-
-``` 
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-brew install python
-pip install virtualenv 
-```
-
 #### Run the Flasher ####
 
 ````
-./run_mLRS_Flasher_mac.py
+run_mLRS_Flasher_mac.sh
 ````
 
 ### Linux ###
