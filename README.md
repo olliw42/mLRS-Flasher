@@ -21,7 +21,7 @@ mLRSFlasher is based on Python, and thus needs a full Python3 installation on yo
 #### Run the Flasher ####
 
 ````
-run_mLRS_Flasher_mac.sh
+./run_mLRS_Flasher_mac.sh
 ````
 
 ### Linux ###
