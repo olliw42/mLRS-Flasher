@@ -91,7 +91,8 @@ setup_virtualenv() {
 # Run the Python script inside the venv
 run_flasher() {
     status "🚀 Running mLRS_Flasher.py."
-    ./venv/bin/python mLRS_Flasher.py
+    source ./venv/bin/activate
+    python mLRS_Flasher.py
 }
 
 ### MAIN ###
