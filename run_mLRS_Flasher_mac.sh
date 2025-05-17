@@ -92,7 +92,7 @@ setup_virtualenv() {
 run_flasher() {
     status "🚀 Running mLRS_Flasher.py."
     source ./venv/bin/activate
-    python mLRS_Flasher.py
+    ./mLRS_Flasher.py
 }
 
 ### MAIN ###
