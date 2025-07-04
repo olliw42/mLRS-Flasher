@@ -11,6 +11,7 @@ win_dist/*
 tools/win_build/*
 tools/win_dist/*
 tools/venv/*
+.DS_Store
 
 # Prerequisites
 *.d
