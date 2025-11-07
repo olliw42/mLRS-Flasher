@@ -148,6 +148,20 @@ g_targetDict = {
                 'baud' : 115200,
             },
         },
+        'tx-radiomaster-nomad' : {
+            'description' :
+                "Flash method: connect to USB (select COM port)\n" +
+                "\nWireless bridge: ESP32C3\n" +
+                "For flashing the wireless bridge: \n" +
+                "  - set 'Tx Ser Dest' to serial2\n" +
+                "  - set 'Tx Ser Baudrate' to 115200\n" +
+                "  - put Tx module into FLASH_ESP by holding button located under the 'T' in RadioMaster for 4 seconds\n",
+            'wireless' : {
+                'chipset' : 'esp32c3',
+                'reset' : 'no dtr',
+                'baud' : 115200,
+            },
+        },
         'tx-radiomaster-ranger' : {
             'description' :
                 "Flash method: connect to USB (select COM port)\n" +
