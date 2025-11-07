@@ -241,7 +241,25 @@ def find_serial_ports_usbttl_devices():
 
 def _flash_esptool_argstr(programmer, firmware, comport, baudrate):
     assets_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'assets')
-    if 'esp32c3' in programmer: # must come before we test for 'eps32'!
+    if 'esp32c3' in programmer and 'no dtr' in programmer: # must come before we test for 'eps32'!
+        args = (
+            '--chip esp32c3 ' +
+            '--port "' + comport + '" ' +
+            '--baud ' + str(baudrate) + ' ' +
+            '--before no_reset --after hard_reset ' +
+            'write_flash ' +
+            '-z ' +
+            '--flash_mode dio --flash_freq 40m --flash_size 4MB ' +
+            '0x0000 ' +
+            '"' + os.path.join(assets_path,'esp32c3','bootloader.bin') + '" ' +
+            '0x8000 ' +
+            '"' + os.path.join(assets_path,'esp32c3','partitions.bin') + '" ' +
+            '0xe000 ' +
+            '"' + os.path.join(assets_path,'esp32c3','boot_app0.bin') + '" ' +
+            '0x10000 ' +
+            '"' + firmware + '"'
+            )
+    elif 'esp32c3' in programmer: # must come before we test for 'eps32'!
         args = (
             '--chip esp32c3 ' +
             '--port "' + comport + '" ' +
