@@ -1040,7 +1040,10 @@ class App(ctk.CTk):
         else:
             baudrate = 921600
         #url = 'https://raw.githubusercontent.com/olliw42/mLRS/refs/heads/main/firmware/wirelessbridge-esp8266/mlrs-wireless-bridge-esp8266.ino.bin'
-        firmware_filename = 'mlrs-wireless-bridge-esp8266.ino.bin'
+        if 'chipset' == 'esp32c3':
+            firmware_filename = 'mlrs-wireless-bridge-esp32c3.ino.bin'
+        else:
+            firmware_filename = 'mlrs-wireless-bridge-esp8266.ino.bin'
         url = g_wirelessbridge_path_url + firmware_filename
         flashDevice(programmer, url, firmware_filename, comport, baudrate)
 
