@@ -269,7 +269,7 @@ def _flash_esptool_argstr(programmer, firmware, comport, baudrate):
             bootloader_file = 'bootloader80QIO.bin'
         else:
             bootloader_file = 'bootloader.bin'
-        print(firmware_version, bootloader_file)
+        #print(firmware_version, bootloader_file)
         args = (
             '--chip esp32 ' +
             '--port "' + comport + '" ' +
