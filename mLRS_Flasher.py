@@ -241,12 +241,16 @@ def find_serial_ports_usbttl_devices():
 
 def _flash_esptool_argstr(programmer, firmware, comport, baudrate):
     assets_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'assets')
-    if 'esp32c3' in programmer and 'no dtr' in programmer: # must come before we test for 'eps32'!
+    if 'no dtr' in programmer:
+        before_arg = '--before no_reset'
+    else:
+        before_arg = '--before default_reset'
+    if 'esp32c3' in programmer: # must come before we test for 'esp32'!
         args = (
             '--chip esp32c3 ' +
             '--port "' + comport + '" ' +
             '--baud ' + str(baudrate) + ' ' +
-            '--before no_reset --after hard_reset ' +
+            before_arg + ' --after hard_reset ' +
             'write_flash ' +
             '-z ' +
             '--flash_mode dio --flash_freq 40m --flash_size 4MB ' +
@@ -258,31 +262,13 @@ def _flash_esptool_argstr(programmer, firmware, comport, baudrate):
             '"' + os.path.join(assets_path,'esp32c3','boot_app0.bin') + '" ' +
             '0x10000 ' +
             '"' + firmware + '"'
-            )
-    elif 'esp32c3' in programmer: # must come before we test for 'eps32'!
-        args = (
-            '--chip esp32c3 ' +
-            '--port "' + comport + '" ' +
-            '--baud ' + str(baudrate) + ' ' +
-            '--before default_reset --after hard_reset ' +
-            'write_flash ' +
-            '-z ' +
-            '--flash_mode dio --flash_freq 40m --flash_size 4MB ' +
-            '0x0000 ' +
-            '"' + os.path.join(assets_path,'esp32c3','bootloader.bin') + '" ' +
-            '0x8000 ' +
-            '"' + os.path.join(assets_path,'esp32c3','partitions.bin') + '" ' +
-            '0xe000 ' +
-            '"' + os.path.join(assets_path,'esp32c3','boot_app0.bin') + '" ' +
-            '0x10000 ' +
-            '"' + firmware + '"'
-            )
+        )
     elif 'esp32' in programmer:
         args = (
             '--chip esp32 ' +
             '--port "' + comport + '" ' +
             '--baud ' + str(baudrate) + ' ' +
-            '--before default_reset --after hard_reset ' +
+            before_arg + ' --after hard_reset ' +
             'write_flash ' +
             '-z ' +
             '--flash_mode dio --flash_freq 40m --flash_size 4MB ' +
@@ -295,22 +281,12 @@ def _flash_esptool_argstr(programmer, firmware, comport, baudrate):
             '0x10000 ' +
             '"' + firmware + '"'
             )
-    elif ('esp8266' in programmer or 'esp8285' in programmer) and 'no dtr' in programmer:
+    elif ('esp8266' in programmer or 'esp8285' in programmer):
         args = (
             '--chip esp8266 ' +
             '--port "' + comport + '" ' +
             '--baud ' + str(baudrate) + ' ' +
-            '--before no_reset --after soft_reset ' +
-            'write_flash ' +
-            '0x0 ' +
-            '"' + firmware + '"'
-            )
-    elif ('esp8266' in programmer or 'esp8285' in programmer): # 'dtr'
-        args = (
-            '--chip esp8266 ' +
-            '--port "' + comport + '" ' +
-            '--baud ' + str(baudrate) + ' ' +
-            '--before default_reset --after hard_reset ' +
+            before_arg + ' --after hard_reset ' +
             'write_flash ' +
             '0x0 ' +
             '"' + firmware + '"'
