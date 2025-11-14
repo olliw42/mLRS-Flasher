@@ -264,12 +264,12 @@ def _flash_esptool_argstr(programmer, firmware, comport, baudrate):
             '"' + firmware + '"'
         )
     elif 'esp32' in programmer:
-        firmware_version = int(os.path.basename(firmware).split('v')[1].split('-')[0].replace('.', ''))
+        firmware_version = int(''.join(re.search(r'v(\d+\.\d+\.\d+)', os.path.basename(firmware)).group(1).split('.')))
         if firmware_version >= 1307:
             bootloader_file = 'bootloader80QIO.bin'
         else:
             bootloader_file = 'bootloader.bin'
-        #print(firmware_version, bootloader_file)
+        print(firmware_version, bootloader_file)
         args = (
             '--chip esp32 ' +
             '--port "' + comport + '" ' +
