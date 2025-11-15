@@ -6,9 +6,9 @@
 # OlliW @ www.olliw.eu
 #************************************************************
 # mLRS Flasher Desktop App
-# 14. Nov. 2025 001
+# 15. Nov. 2025 001
 #************************************************************
-app_version = '14.11.2025-001'
+app_version = '15.11.2025-001'
 
 import os, sys, time
 import subprocess
@@ -1027,7 +1027,7 @@ class App(ctk.CTk):
         else:
             baudrate = 921600
         #url = 'https://raw.githubusercontent.com/olliw42/mLRS/refs/heads/main/firmware/wirelessbridge-esp8266/mlrs-wireless-bridge-esp8266.ino.bin'
-        if 'esp32c3' in programmer:
+        if 'esp32c3' in programmer: # the wireless chipset is in wireless['chipset'], not chipset, so we test programmer to catch the fallback
             firmware_filename = 'mlrs-wireless-bridge-esp32c3.ino.bin'
         else:
             firmware_filename = 'mlrs-wireless-bridge-esp8266.ino.bin'
