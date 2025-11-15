@@ -262,13 +262,15 @@ def _flash_esptool_argstr(programmer, firmware, comport, baudrate):
             '"' + os.path.join(assets_path,'esp32c3','boot_app0.bin') + '" ' +
             '0x10000 ' +
             '"' + firmware + '"'
-        )
+            )
     elif 'esp32' in programmer:
+        # flash was changed to 80 MHz QIO with this PR: https://github.com/olliw42/mLRS/pull/320
+        # observed that the code will still run but flash writes fail with older bootloader
         firmware_version = int(''.join(re.search(r'v(\d+\.\d+\.\d+)', os.path.basename(firmware)).group(1).split('.')))
         if firmware_version >= 1307:
-            bootloader_file = 'bootloader80QIO.bin'
+            bootloader_file = 'bootloader_80qio.bin'
         else:
-            bootloader_file = 'bootloader.bin'
+            bootloader_file = 'bootloader_40dio.bin'
         #print(firmware_version, bootloader_file)
         args = (
             '--chip esp32 ' +
