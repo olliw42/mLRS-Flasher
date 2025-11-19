@@ -265,10 +265,10 @@ g_targetDict = {
         'rx-radiomaster-rp4td-2400' : {
             'chipset' : 'esp32',
         },
-        'rx-radiomaster-xr1-900' : {
+        'rx-radiomaster-xr1' : {
             'chipset' : 'esp32c3',
         },
-        'rx-radiomaster-xr4-900' : {
+        'rx-radiomaster-xr4' : {
             'chipset' : 'esp32',
         },
     },
