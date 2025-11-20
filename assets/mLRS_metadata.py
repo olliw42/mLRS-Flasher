@@ -216,6 +216,18 @@ g_targetDict = {
         },
         'tx-radiomaster-internal-boxer' : {
         },
+        'tx-radiomaster-internal-tx15' : {
+        'description' :
+            "Supported radios: TX15\n" +
+            "Flash method: radio passthrough\n" +
+            "  - connect to USB of your radio and select 'USB Serial (VCP)'\n" +
+            "\nWireless bridge: ESP32C3\n" +
+            "For flashing the wireless bridge:\n" +
+            "  - connect to USB of your radio and select 'USB Serial (VCP)'\n",
+        'wireless' : {
+            'chipset' : 'esp32c3',
+            'baud' : 115200,
+        },
     },
 
     #--------------------
