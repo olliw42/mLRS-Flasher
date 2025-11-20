@@ -216,7 +216,8 @@ g_targetDict = {
         },
         'tx-radiomaster-internal-boxer' : {
         },
-        'tx-radiomaster-internal-tx15' : {
+    },
+    'tx-radiomaster-internal-tx15' : {
         'description' :
             "Supported radios: TX15\n" +
             "Flash method: radio passthrough\n" +
