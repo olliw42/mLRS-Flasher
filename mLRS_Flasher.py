@@ -453,7 +453,10 @@ def flashInternalElrsTxModule(programmer, firmware):
 def flashInternalElrsTxModuleWirelessBridge(programmer, firmware):
     if os_system_run_as_script():
         #print('run as script file')
-        flash_internal_elrs_tx_module_win_as_script('esp8266', firmware, baudrate = 115200, wirelessbridge = True)
+        if 'esp32c3' in programmer:
+            flash_internal_elrs_tx_module_win_as_script('esp32c3', firmware, baudrate = 115200, wirelessbridge = True)
+        else:
+            flash_internal_elrs_tx_module_win_as_script('esp8266', firmware, baudrate = 115200, wirelessbridge = True)
         return # done
 
     if 'esp32c3' in programmer:
