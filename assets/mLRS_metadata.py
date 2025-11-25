@@ -209,7 +209,8 @@ g_targetDict = {
             "For flashing the wireless bridge:\n" +
             "  - connect to USB of your radio and select 'USB Serial (VCP)'\n",
         'wireless' : {
-            'chipset' : 'esp8266',
+            # 'chipset' : 'esp8266',
+            'chipset' : 'esp32c3', # for debugging while no build is available
             'baud' : 115200,
         },
         'tx-radiomaster-internal-2400' : {
