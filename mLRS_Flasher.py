@@ -299,7 +299,7 @@ def _flash_esptool_argstr(programmer, firmware, comport, baudrate):
             '0x0 ' +
             '"' + firmware + '"'
             )
-    #print(args)
+    print(args)
     #args = '--port "' + radioport + '" ' + '--baud ' + str(baudrate) + ' ' + 'flash_id'
     return args
 
@@ -432,7 +432,9 @@ def flash_internal_elrs_tx_module(programmer, firmware, baudrate, wirelessbridge
     print('The firmware to flash is:', firmware)
 
     # TODO: can we catch if this was succesfull?
+    print(programmer, firmware, radioport, baudrate)
     flash_esptool(programmer, firmware, radioport, baudrate)
+    
 
     print()
     print('*** DONE ***')
@@ -1105,20 +1107,22 @@ class App(ctk.CTk):
 
     def flashTxModuleInternalWirelessBridgeFirmware(self):
         #print('flashTxModuleInternalWirelessBridgeFirmware()')
-        comport = self.fTxModuleInternal_ComPort_menu.get()
+        #comport = self.fTxModuleInternal_ComPort_menu.get()
         #print('--->',comport)
         device_type = self.fTxModuleInternal_DeviceType_menu.get()
         firmware_filename = self.fTxModuleInternal_FirmwareFile_menu.get()
         if 'failed' in firmware_filename:
             print('ERROR: flashTxModuleEInternalWirelessBridgeFirmware() [1]')
             return
-        chipset, flashmethod, description, wireless = self.get_metadata('tx', device_type, firmware_filename)
+        print(device_type, firmware_filename)
+        chipset, flashmethod, description, wireless = self.get_metadata('txint', device_type, firmware_filename)
         #print('--->',wireless)
         programmer = 'wirelessbridge internal'
         if 'chipset' in wireless:
             programmer = programmer + ' ' + wireless['chipset']
         else:
             programmer = programmer + ' esp8266'
+        print(programmer)
         #if 'reset' in wireless:
         #    programmer = programmer + ' ' + wireless['reset']
         #else:
