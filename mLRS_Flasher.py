@@ -299,7 +299,7 @@ def _flash_esptool_argstr(programmer, firmware, comport, baudrate):
             '0x0 ' +
             '"' + firmware + '"'
             )
-    print(args)
+    #print(args)
     #args = '--port "' + radioport + '" ' + '--baud ' + str(baudrate) + ' ' + 'flash_id'
     return args
 
@@ -432,9 +432,7 @@ def flash_internal_elrs_tx_module(programmer, firmware, baudrate, wirelessbridge
     print('The firmware to flash is:', firmware)
 
     # TODO: can we catch if this was succesfull?
-    print(programmer, firmware, radioport, baudrate)
     flash_esptool(programmer, firmware, radioport, baudrate)
-    
 
     print()
     print('*** DONE ***')
@@ -1107,8 +1105,6 @@ class App(ctk.CTk):
 
     def flashTxModuleInternalWirelessBridgeFirmware(self):
         #print('flashTxModuleInternalWirelessBridgeFirmware()')
-        #comport = self.fTxModuleInternal_ComPort_menu.get()
-        #print('--->',comport)
         device_type = self.fTxModuleInternal_DeviceType_menu.get()
         firmware_filename = self.fTxModuleInternal_FirmwareFile_menu.get()
         if 'failed' in firmware_filename:
@@ -1122,15 +1118,7 @@ class App(ctk.CTk):
             programmer = programmer + ' ' + wireless['chipset']
         else:
             programmer = programmer + ' esp8266'
-        print(programmer)
-        #if 'reset' in wireless:
-        #    programmer = programmer + ' ' + wireless['reset']
-        #else:
-        #    programmer = programmer + ' dtr'
-        #if 'baud' in wireless:
-        #    baudrate = wireless['baud']
-        #else:
-        #    baudrate = 921600
+        #print(programmer)
         #url = 'https://raw.githubusercontent.com/olliw42/mLRS/refs/heads/main/firmware/wirelessbridge-esp8266/mlrs-wireless-bridge-esp8266.ino.bin'
         if 'esp32c3' in programmer: # the wireless chipset is in wireless['chipset'], not chipset, so we test programmer to catch the fallback
             firmware_filename = 'mlrs-wireless-bridge-esp32c3.ino.bin'
@@ -1138,7 +1126,6 @@ class App(ctk.CTk):
             firmware_filename = 'mlrs-wireless-bridge-esp8266.ino.bin'
         url = g_wirelessbridge_path_url + firmware_filename
         flashDevice(programmer, url, firmware_filename)
-
 
 
     # calls downloadFileAndWriteToDisk() for the selected filename, and saves it
