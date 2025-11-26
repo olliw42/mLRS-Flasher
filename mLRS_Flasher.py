@@ -245,13 +245,17 @@ def _flash_esptool_argstr(programmer, firmware, comport, baudrate):
         before_arg = '--before no_reset'
     else:
         before_arg = '--before default_reset'
+    if 'mlrs-wireless-bridge' in firmware:
+        erase_arg = '-e ' # for wireless bridge we do a full erase
+    else:
+        erase_arg = ''
     if 'esp32c3' in programmer: # must come before we test for 'esp32'!
         args = (
             '--chip esp32c3 ' +
             '--port "' + comport + '" ' +
             '--baud ' + str(baudrate) + ' ' +
             before_arg + ' --after hard_reset ' +
-            'write_flash ' +
+            'write_flash ' + erase_arg + 
             '-z ' +
             '--flash_mode dio --flash_freq 40m --flash_size 4MB ' +
             '0x0000 ' +
