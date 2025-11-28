@@ -43,6 +43,7 @@ g_receiverDeviceTypeDict = {
 g_txModuleInternalDeviceTypeDict = {
     'Jumper Radio' :      { 'fname' : 'tx-jumper-internal',      'chipset' : 'esp32' },
     'RadioMaster Radio' : { 'fname' : 'tx-radiomaster-internal', 'chipset' : 'esp32' },
+    'RadioMaster TX15 Radio' : { 'fname' : 'tx-radiomaster-internal-tx15', 'chipset' : 'esp32' },
 }
 
 
