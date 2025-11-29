@@ -31,11 +31,7 @@ def find_radio_serial_ports():
     radioportList = []
     for port in portList:
         if port.vid == 0x0483 and port.pid == 0x5740:
-            if os.name == 'posix': # we do have more info on this os
-                if port.manufacturer == 'EdgeTX':
-                    radioportList.append(port.device)
-            else:
-                radioportList.append(port.device)
+            radioportList.append(port.device)
     return radioportList
 
 
