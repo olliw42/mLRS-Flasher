@@ -203,7 +203,7 @@ g_targetDict = {
     'tx-radiomaster-internal' : {
         'tx-radiomaster-internal-2400' : {
         'description' :
-            "Supported radios: TX16S, TX12, MT12, Zorro, Pocket, Boxer\n" +
+            "Supported radios: TX16S, TX12, MT12, Zorro, Pocket\n" +
             "Flash method: radio passthrough\n" +
             "  - connect to USB of your radio and select 'USB Serial (VCP)'\n" +
             "\nWireless bridge: ESP8285\n" +
@@ -216,7 +216,7 @@ g_targetDict = {
         },
         'tx-radiomaster-internal-boxer' : {
         'description' :
-            "Supported radios: TX16S, TX12, MT12, Zorro, Pocket, Boxer\n" +
+            "Supported radios: Boxer\n" +
             "Flash method: radio passthrough\n" +
             "  - connect to USB of your radio and select 'USB Serial (VCP)'\n" +
             "\nWireless bridge: ESP8285\n" +
