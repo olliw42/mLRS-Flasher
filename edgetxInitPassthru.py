@@ -204,3 +204,4 @@ example usage in batch file
    if os_system_is_frozen_app(): F.write('@pause'+'\n')
 
 '''
+
