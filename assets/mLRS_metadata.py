@@ -201,6 +201,7 @@ g_targetDict = {
         },
     },
     'tx-radiomaster-internal' : {
+        'tx-radiomaster-internal-2400' : {
         'description' :
             "Supported radios: TX16S, TX12, MT12, Zorro, Pocket, Boxer\n" +
             "Flash method: radio passthrough\n" +
@@ -211,12 +212,49 @@ g_targetDict = {
         'wireless' : {
             'chipset' : 'esp8266',
             'baud' : 115200,
-        },
-        'tx-radiomaster-internal-2400' : {
+            },
         },
         'tx-radiomaster-internal-boxer' : {
+        'description' :
+            "Supported radios: TX16S, TX12, MT12, Zorro, Pocket, Boxer\n" +
+            "Flash method: radio passthrough\n" +
+            "  - connect to USB of your radio and select 'USB Serial (VCP)'\n" +
+            "\nWireless bridge: ESP8285\n" +
+            "For flashing the wireless bridge:\n" +
+            "  - connect to USB of your radio and select 'USB Serial (VCP)'\n",
+        'wireless' : {
+            'chipset' : 'esp8266',
+            'baud' : 115200,
+            },
+        },
+        'tx-radiomaster-internal-tx15' : {
+        'description' :
+            "Supported radios: TX15\n" +
+            "Flash method: radio passthrough\n" +
+            "  - connect to USB of your radio and select 'USB Serial (VCP)'\n" +
+            "\nWireless bridge: ESP32C3\n" +
+            "For flashing the wireless bridge:\n" +
+            "  - connect to USB of your radio and select 'USB Serial (VCP)'\n",
+        'wireless' : {
+            'chipset' : 'esp32c3',
+            'baud' : 115200,
+            },
+        },
+        'tx-radiomaster-internal-gx12' : {
+        'description' :
+            "Supported radios: GX12\n" +
+            "Flash method: radio passthrough\n" +
+            "  - connect to USB of your radio and select 'USB Serial (VCP)'\n" +
+            "\nWireless bridge: ESP32C3\n" +
+            "For flashing the wireless bridge:\n" +
+            "  - connect to USB of your radio and select 'USB Serial (VCP)'\n",
+        'wireless' : {
+            'chipset' : 'esp32c3',
+            'baud' : 115200,
+            },
         },
     },
+
 
     #--------------------
     #-- Receivers
