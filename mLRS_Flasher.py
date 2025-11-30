@@ -247,11 +247,11 @@ def _flash_esptool_argstr(programmer, firmware, comport, baudrate):
         before_arg = '--before no_reset'
     else:
         before_arg = '--before default_reset'
+    if 'full_erase' in programmer:
+        erase_arg = '-e '
+    else:
+        erase_arg = ''
     if 'esp32c3' in programmer: # must come before we test for 'esp32'!
-        if 'mlrs-wireless-bridge-esp32c3' in firmware:
-            erase_arg = '-e ' # for esp32c3 wireless bridge we do a full erase
-        else:
-            erase_arg = ''
         args = (
             '--chip esp32c3 ' +
             '--port "' + comport + '" ' +
@@ -283,7 +283,7 @@ def _flash_esptool_argstr(programmer, firmware, comport, baudrate):
             '--port "' + comport + '" ' +
             '--baud ' + str(baudrate) + ' ' +
             before_arg + ' --after hard_reset ' +
-            'write_flash ' +
+            'write_flash ' + erase_arg + 
             '-z ' +
             '--flash_mode dio --flash_freq 40m --flash_size 4MB ' +
             '0x1000  ' +
@@ -301,7 +301,7 @@ def _flash_esptool_argstr(programmer, firmware, comport, baudrate):
             '--port "' + comport + '" ' +
             '--baud ' + str(baudrate) + ' ' +
             before_arg + ' --after hard_reset ' +
-            'write_flash ' +
+            'write_flash ' + erase_arg + 
             '0x0 ' +
             '"' + firmware + '"'
             )
@@ -459,16 +459,10 @@ def flashInternalElrsTxModule(programmer, firmware):
 def flashInternalElrsTxModuleWirelessBridge(programmer, firmware):
     if os_system_run_as_script():
         #print('run as script file')
-        if 'esp32c3' in programmer:
-            flash_internal_elrs_tx_module_win_as_script('esp32c3', firmware, baudrate = 115200, wirelessbridge = True)
-        else:
-            flash_internal_elrs_tx_module_win_as_script('esp8266', firmware, baudrate = 115200, wirelessbridge = True)
+        flash_internal_elrs_tx_module_win_as_script(programmer, firmware, baudrate = 115200, wirelessbridge = True)
         return # done
 
-    if 'esp32c3' in programmer:
-        flash_internal_elrs_tx_module('esp32c3', firmware, 115200, True)
-    else:
-        flash_internal_elrs_tx_module('esp8266', firmware, 115200, True)
+    flash_internal_elrs_tx_module(programmer, firmware, 115200, True)
 
 
 '''
@@ -1107,18 +1101,17 @@ class App(ctk.CTk):
         print('ERROR: flashTxModuleInternalFirmware() [2]')
 
     def flashTxModuleInternalWirelessBridgeFirmware(self):
-        #print('flashTxModuleInternalWirelessBridgeFirmware()')
         device_type = self.fTxModuleInternal_DeviceType_menu.get()
         firmware_filename = self.fTxModuleInternal_FirmwareFile_menu.get()
         if 'failed' in firmware_filename:
-            print('ERROR: flashTxModuleEInternalWirelessBridgeFirmware() [1]')
+            print('ERROR: flashTxModuleInternalWirelessBridgeFirmware() [1]')
             return
-        #print(device_type, firmware_filename)
         chipset, flashmethod, description, wireless = self.get_metadata('txint', device_type, firmware_filename)
-        #print('--->',wireless)
         programmer = 'wirelessbridge internal'
         if 'chipset' in wireless:
             programmer = programmer + ' ' + wireless['chipset']
+        if 'erase' in wireless:
+            programmer = programmer + ' ' + wireless['erase']
         else:
             programmer = programmer + ' esp8266'
         #print(programmer)
