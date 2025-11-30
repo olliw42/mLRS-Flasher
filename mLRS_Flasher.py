@@ -1035,7 +1035,7 @@ class App(ctk.CTk):
             programmer = programmer + ' ' + wireless['erase']
         if self.fTxModuleExternal_WirelessBridge_FullErase_checkbox.get() == 1:
             if 'full_erase' not in programmer:
-                programmer += ' full_erase'
+                programmer = programmer + ' full_erase'
         if 'baud' in wireless:
             baudrate = wireless['baud']
         else:
@@ -1130,7 +1130,7 @@ class App(ctk.CTk):
             programmer = programmer + ' ' + wireless['erase']
         if self.fTxModuleInternal_WirelessBridge_FullErase_checkbox.get() == 1:
             if 'full_erase' not in programmer:
-                programmer += ' full_erase'
+                programmer = programmer + ' full_erase'
         #print(programmer)
         #url = 'https://raw.githubusercontent.com/olliw42/mLRS/refs/heads/main/firmware/wirelessbridge-esp8266/mlrs-wireless-bridge-esp8266.ino.bin'
         if 'esp32c3' in programmer: # the wireless chipset is in wireless['chipset'], not chipset, so we test programmer to catch the fallback
@@ -1517,6 +1517,7 @@ class App(ctk.CTk):
 
         self.fTxModuleExternal_FullErase_checkbox = ctk.CTkCheckBox(self.fTxModuleExternal_fFlash, text="Full Chip Erase")
         self.fTxModuleExternal_FullErase_checkbox.grid(row=1, column=0, columnspan=2, pady=(10,0))
+        self.fTxModuleExternal_FullErase_checkbox.grid_remove() # hidden by default
 
         # Center the content in the frame
         self.fTxModuleExternal_fFlash.grid_columnconfigure(0, weight=1)
@@ -1541,6 +1542,7 @@ class App(ctk.CTk):
 
         self.fTxModuleExternal_WirelessBridge_FullErase_checkbox = ctk.CTkCheckBox(self.fTxModuleExternal_fWirelessBridge, text="Full Chip Erase")
         self.fTxModuleExternal_WirelessBridge_FullErase_checkbox.grid(row=2, column=0, pady=(10,0))
+        self.fTxModuleExternal_WirelessBridge_FullErase_checkbox.grid_remove() # hidden by default
 
         #-- Description text box --
         self.fTxModuleExternal_Description_textbox = CTkInfoTextbox(self.fTxModuleExternal,
@@ -1672,6 +1674,7 @@ class App(ctk.CTk):
         self.fReceiver_Flash_button.grid(row=0, column=0)
         self.fReceiver_FullErase_checkbox = ctk.CTkCheckBox(self.fReceiver_fFlash, text="Full Chip Erase")
         self.fReceiver_FullErase_checkbox.grid(row=1, column=0, pady=(10,0))
+        self.fReceiver_FullErase_checkbox.grid_remove() # hidden by default
         wrow += 1
 
         # Flash Method Frame
@@ -1857,6 +1860,7 @@ class App(ctk.CTk):
         self.fTxModuleInternal_Flash_button.grid(row=0, column=0)
         self.fTxModuleInternal_FullErase_checkbox = ctk.CTkCheckBox(self.fTxModuleInternal_fFlash, text="Full Chip Erase")
         self.fTxModuleInternal_FullErase_checkbox.grid(row=1, column=0, pady=(10,0))
+        self.fTxModuleInternal_FullErase_checkbox.grid_remove() # hidden by default
         wrow += 1
 
         #-- Wireless Bridge --
@@ -1878,6 +1882,7 @@ class App(ctk.CTk):
 
         self.fTxModuleInternal_WirelessBridge_FullErase_checkbox = ctk.CTkCheckBox(self.fTxModuleInternal_fWirelessBridge, text="Full Chip Erase")
         self.fTxModuleInternal_WirelessBridge_FullErase_checkbox.grid(row=2, column=0, pady=(10,0))
+        self.fTxModuleInternal_WirelessBridge_FullErase_checkbox.grid_remove() # hidden by default
 
         #-- Description text box --
         self.fTxModuleInternal_Description_textbox = CTkInfoTextbox(self.fTxModuleInternal,
