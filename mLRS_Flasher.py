@@ -1004,7 +1004,10 @@ class App(ctk.CTk):
                 elif 'esp32' in chipset:
                     comport = self.fTxModuleExternal_ComPort_menu.get()
                     print('--->',comport)
-                    flashDevice(chipset, key['url'], firmware_filename, comport=comport, baudrate=921600)
+                    programmer_arg = chipset
+                    if self.fTxModuleExternal_FullErase_checkbox.get() == 1:
+                        programmer_arg += ' full_erase'
+                    flashDevice(programmer_arg, key['url'], firmware_filename, comport=comport, baudrate=921600)
                     return
         print('ERROR: flashTxModuleExternalFirmware() [2]')
 
@@ -1030,6 +1033,9 @@ class App(ctk.CTk):
             programmer = programmer + ' dtr'
         if 'erase' in wireless:
             programmer = programmer + ' ' + wireless['erase']
+        if self.fTxModuleExternal_WirelessBridge_FullErase_checkbox.get() == 1:
+            if 'full_erase' not in programmer:
+                programmer += ' full_erase'
         if 'baud' in wireless:
             baudrate = wireless['baud']
         else:
@@ -1082,7 +1088,10 @@ class App(ctk.CTk):
                     else: # 'esptool'
                         comport = self.fReceiver_ComPort_menu.get()
                         print('--->',comport)
-                        flashDevice(chipset + ' no dtr', key['url'], firmware_filename, comport=comport, baudrate=921600)
+                        programmer_arg = chipset + ' no dtr'
+                        if self.fReceiver_FullErase_checkbox.get() == 1:
+                            programmer_arg += ' full_erase'
+                        flashDevice(programmer_arg, key['url'], firmware_filename, comport=comport, baudrate=921600)
                     return
         print('ERROR: flashReceiverFirmware() [2]')
 
@@ -1098,7 +1107,10 @@ class App(ctk.CTk):
             sys.exit(1)
         for key in self.txIntFirmwareFilesList:
             if firmware_filename in key['path']: # that's our firmware entry
-                flashDevice('esp32 internal', key['url'], firmware_filename)
+                programmer_arg = 'esp32 internal'
+                if self.fTxModuleInternal_FullErase_checkbox.get() == 1:
+                    programmer_arg += ' full_erase'
+                flashDevice(programmer_arg, key['url'], firmware_filename)
                 return
         print('ERROR: flashTxModuleInternalFirmware() [2]')
 
@@ -1116,6 +1128,9 @@ class App(ctk.CTk):
             programmer = programmer + ' esp8266'
         if 'erase' in wireless:
             programmer = programmer + ' ' + wireless['erase']
+        if self.fTxModuleInternal_WirelessBridge_FullErase_checkbox.get() == 1:
+            if 'full_erase' not in programmer:
+                programmer += ' full_erase'
         #print(programmer)
         #url = 'https://raw.githubusercontent.com/olliw42/mLRS/refs/heads/main/firmware/wirelessbridge-esp8266/mlrs-wireless-bridge-esp8266.ino.bin'
         if 'esp32c3' in programmer: # the wireless chipset is in wireless['chipset'], not chipset, so we test programmer to catch the fallback
@@ -1500,6 +1515,13 @@ class App(ctk.CTk):
         self.fTxModuleExternal_ComPort_menu.grid(row=0, column=1, padx=20)
         self.fTxModuleExternal_ComPort_menu.grid_remove() # grid_remove() memorizes settings, grid_forget() looses them
 
+        self.fTxModuleExternal_FullErase_checkbox = ctk.CTkCheckBox(self.fTxModuleExternal_fFlash, text="Full Chip Erase")
+        self.fTxModuleExternal_FullErase_checkbox.grid(row=1, column=0, columnspan=2, pady=(10,0))
+
+        # Center the content in the frame
+        self.fTxModuleExternal_fFlash.grid_columnconfigure(0, weight=1)
+        self.fTxModuleExternal_fFlash.grid_columnconfigure(1, weight=1)
+
         #-- Wireless Bridge --
         self.fTxModuleExternal_fWirelessBridge = ctk.CTkFrame(self.fTxModuleExternal, corner_radius=0, fg_color="transparent")
         self.fTxModuleExternal_fWirelessBridge.grid(row=wrow, column=0, columnspan=2, padx=20, pady=20, sticky="we")
@@ -1516,6 +1538,9 @@ class App(ctk.CTk):
             text = "Flash Wireless Bridge",
             command = self.fTxModuleExternal_WirelessBridgeFlash_button_event)
         self.fTxModuleExternal_WirelessBridgeFlash_button.grid(row=1, column=0, pady=(20,0))
+
+        self.fTxModuleExternal_WirelessBridge_FullErase_checkbox = ctk.CTkCheckBox(self.fTxModuleExternal_fWirelessBridge, text="Full Chip Erase")
+        self.fTxModuleExternal_WirelessBridge_FullErase_checkbox.grid(row=2, column=0, pady=(10,0))
 
         #-- Description text box --
         self.fTxModuleExternal_Description_textbox = CTkInfoTextbox(self.fTxModuleExternal,
@@ -1538,6 +1563,13 @@ class App(ctk.CTk):
             self.fTxModuleExternal_fWirelessBridge.grid()
         else:
             self.fTxModuleExternal_fWirelessBridge.grid_remove()
+
+        # Conditional visibility for Full Chip Erase checkbox
+        chipset, _, _, _ = self.get_metadata('tx', device_type, firmware_filename)
+        if chipset and 'esp' in chipset.lower():
+            self.fTxModuleExternal_FullErase_checkbox.grid()
+        else:
+            self.fTxModuleExternal_FullErase_checkbox.grid_remove()
         text, tag = '', None
         if 'dev' in self.fTxModuleExternal_FirmwareVersion_menu.get():
             text, tag = warning_dev_version, warning_dev_version_tag
@@ -1629,10 +1661,17 @@ class App(ctk.CTk):
         wrow += 1
 
         # Flash Button
-        self.fReceiver_Flash_button = CTkFlashButton(self.fReceiver,
+        # Flash Button
+        # Flash Button
+        self.fReceiver_fFlash = ctk.CTkFrame(self.fReceiver, corner_radius=0, fg_color="transparent")
+        self.fReceiver_fFlash.grid(row=wrow, column=0, columnspan=2, padx=20, pady=20)
+        self.fReceiver_fFlash.grid_columnconfigure(0, weight=1)
+        self.fReceiver_Flash_button = CTkFlashButton(self.fReceiver_fFlash,
             text = "Flash Receiver",
             command = self.fReceiver_Flash_button_event)
-        self.fReceiver_Flash_button.grid(row=wrow, column=0, columnspan=2, padx=20, pady=20)
+        self.fReceiver_Flash_button.grid(row=0, column=0)
+        self.fReceiver_FullErase_checkbox = ctk.CTkCheckBox(self.fReceiver_fFlash, text="Full Chip Erase")
+        self.fReceiver_FullErase_checkbox.grid(row=1, column=0, pady=(10,0))
         wrow += 1
 
         # Flash Method Frame
@@ -1681,6 +1720,14 @@ class App(ctk.CTk):
         device_type = self.fReceiver_DeviceType_menu.get()
         firmware_filename = self.fReceiver_FirmwareFile_menu.get()
         _, flashmethod, description, wireless = self.get_metadata('rx', device_type, firmware_filename)
+        
+        # Conditional visibility for Full Chip Erase checkbox
+        chipset = _ # get_metadata returns chipset as first arg
+        if chipset and 'esp' in chipset.lower():
+            self.fReceiver_FullErase_checkbox.grid()
+        else:
+            self.fReceiver_FullErase_checkbox.grid_remove()
+
         text, tag = '', None
         if 'dev' in self.fReceiver_FirmwareVersion_menu.get():
             text, tag = warning_dev_version, warning_dev_version_tag
@@ -1800,10 +1847,16 @@ class App(ctk.CTk):
         wrow += 1
 
         # Flash Button
-        self.fTxModuleInternal_Flash_button = CTkFlashButton(self.fTxModuleInternal,
+        # Flash Button
+        self.fTxModuleInternal_fFlash = ctk.CTkFrame(self.fTxModuleInternal, corner_radius=0, fg_color="transparent")
+        self.fTxModuleInternal_fFlash.grid(row=wrow, column=0, columnspan=2, padx=20, pady=20)
+        self.fTxModuleInternal_fFlash.grid_columnconfigure(0, weight=1)
+        self.fTxModuleInternal_Flash_button = CTkFlashButton(self.fTxModuleInternal_fFlash,
             text = "Flash Tx Module",
             command = self.fTxModuleInternal_Flash_button_event)
-        self.fTxModuleInternal_Flash_button.grid(row=wrow, column=0, columnspan=2, padx=20, pady=20)
+        self.fTxModuleInternal_Flash_button.grid(row=0, column=0)
+        self.fTxModuleInternal_FullErase_checkbox = ctk.CTkCheckBox(self.fTxModuleInternal_fFlash, text="Full Chip Erase")
+        self.fTxModuleInternal_FullErase_checkbox.grid(row=1, column=0, pady=(10,0))
         wrow += 1
 
         #-- Wireless Bridge --
@@ -1822,6 +1875,9 @@ class App(ctk.CTk):
             text = "Flash Wireless Bridge",
             command = self.fTxModuleInternal_WirelessBridgeFlash_button_event)
         self.fTxModuleInternal_WirelessBridgeFlash_button.grid(row=1, column=0, pady=(20,0))
+
+        self.fTxModuleInternal_WirelessBridge_FullErase_checkbox = ctk.CTkCheckBox(self.fTxModuleInternal_fWirelessBridge, text="Full Chip Erase")
+        self.fTxModuleInternal_WirelessBridge_FullErase_checkbox.grid(row=2, column=0, pady=(10,0))
 
         #-- Description text box --
         self.fTxModuleInternal_Description_textbox = CTkInfoTextbox(self.fTxModuleInternal,
@@ -1842,6 +1898,13 @@ class App(ctk.CTk):
             self.fTxModuleInternal_fWirelessBridge.grid()
         else:
             self.fTxModuleInternal_fWirelessBridge.grid_remove()
+
+        # Conditional visibility for Full Chip Erase checkbox
+        chipset, _, _, _ = self.get_metadata('txint', device_type, firmware_filename)
+        if chipset and 'esp' in chipset.lower():
+            self.fTxModuleInternal_FullErase_checkbox.grid()
+        else:
+            self.fTxModuleInternal_FullErase_checkbox.grid_remove()
         text, tag = '', None
         if 'dev' in self.fTxModuleInternal_FirmwareVersion_menu.get():
             text, tag = warning_dev_version, warning_dev_version_tag
