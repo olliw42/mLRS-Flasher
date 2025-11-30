@@ -1034,7 +1034,7 @@ class App(ctk.CTk):
         if 'erase' in wireless:
             programmer = programmer + ' ' + wireless['erase']
         if self.fTxModuleExternal_WirelessBridge_FullErase_checkbox.get() == 1:
-            if 'full_erase' not in programmer:
+            if 'full_erase' not in programmer:  # full_erase already here from metadata, so no need to add again
                 programmer = programmer + ' full_erase'
         if 'baud' in wireless:
             baudrate = wireless['baud']
@@ -1129,7 +1129,7 @@ class App(ctk.CTk):
         if 'erase' in wireless:
             programmer = programmer + ' ' + wireless['erase']
         if self.fTxModuleInternal_WirelessBridge_FullErase_checkbox.get() == 1:
-            if 'full_erase' not in programmer:
+            if 'full_erase' not in programmer:  # full_erase already here from metadata, so no need to add again
                 programmer = programmer + ' full_erase'
         #print(programmer)
         #url = 'https://raw.githubusercontent.com/olliw42/mLRS/refs/heads/main/firmware/wirelessbridge-esp8266/mlrs-wireless-bridge-esp8266.ino.bin'
