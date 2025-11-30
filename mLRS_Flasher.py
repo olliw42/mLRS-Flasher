@@ -1028,6 +1028,10 @@ class App(ctk.CTk):
             programmer = programmer + ' ' + wireless['reset']
         else:
             programmer = programmer + ' dtr'
+        if 'erase' in wireless:
+            programmer = programmer + ' ' + wireless['erase']
+        else:
+            programmer = programmer + ' esp8266'
         if 'baud' in wireless:
             baudrate = wireless['baud']
         else:
