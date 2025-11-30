@@ -1030,8 +1030,6 @@ class App(ctk.CTk):
             programmer = programmer + ' dtr'
         if 'erase' in wireless:
             programmer = programmer + ' ' + wireless['erase']
-        else:
-            programmer = programmer + ' esp8266'
         if 'baud' in wireless:
             baudrate = wireless['baud']
         else:
@@ -1114,10 +1112,10 @@ class App(ctk.CTk):
         programmer = 'wirelessbridge internal'
         if 'chipset' in wireless:
             programmer = programmer + ' ' + wireless['chipset']
-        if 'erase' in wireless:
-            programmer = programmer + ' ' + wireless['erase']
         else:
             programmer = programmer + ' esp8266'
+        if 'erase' in wireless:
+            programmer = programmer + ' ' + wireless['erase']
         #print(programmer)
         #url = 'https://raw.githubusercontent.com/olliw42/mLRS/refs/heads/main/firmware/wirelessbridge-esp8266/mlrs-wireless-bridge-esp8266.ino.bin'
         if 'esp32c3' in programmer: # the wireless chipset is in wireless['chipset'], not chipset, so we test programmer to catch the fallback
