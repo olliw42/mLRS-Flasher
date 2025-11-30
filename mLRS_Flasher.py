@@ -1006,7 +1006,7 @@ class App(ctk.CTk):
                     print('--->',comport)
                     programmer_arg = chipset
                     if self.fTxModuleExternal_FullErase_checkbox.get() == 1:
-                        programmer_arg += ' full_erase'
+                        programmer_arg = programmer_arg + ' full_erase'
                     flashDevice(programmer_arg, key['url'], firmware_filename, comport=comport, baudrate=921600)
                     return
         print('ERROR: flashTxModuleExternalFirmware() [2]')
@@ -1090,7 +1090,7 @@ class App(ctk.CTk):
                         print('--->',comport)
                         programmer_arg = chipset + ' no dtr'
                         if self.fReceiver_FullErase_checkbox.get() == 1:
-                            programmer_arg += ' full_erase'
+                            programmer_arg = programmer_arg + ' full_erase'
                         flashDevice(programmer_arg, key['url'], firmware_filename, comport=comport, baudrate=921600)
                     return
         print('ERROR: flashReceiverFirmware() [2]')
@@ -1109,7 +1109,7 @@ class App(ctk.CTk):
             if firmware_filename in key['path']: # that's our firmware entry
                 programmer_arg = 'esp32 internal'
                 if self.fTxModuleInternal_FullErase_checkbox.get() == 1:
-                    programmer_arg += ' full_erase'
+                    programmer_arg = programmer_arg + ' full_erase'
                 flashDevice(programmer_arg, key['url'], firmware_filename)
                 return
         print('ERROR: flashTxModuleInternalFirmware() [2]')
@@ -1663,8 +1663,6 @@ class App(ctk.CTk):
         wrow += 1
 
         # Flash Button
-        # Flash Button
-        # Flash Button
         self.fReceiver_fFlash = ctk.CTkFrame(self.fReceiver, corner_radius=0, fg_color="transparent")
         self.fReceiver_fFlash.grid(row=wrow, column=0, columnspan=2, padx=20, pady=20)
         self.fReceiver_fFlash.grid_columnconfigure(0, weight=1)
@@ -1849,7 +1847,6 @@ class App(ctk.CTk):
         self.fTxModuleInternal_FirmwareFile_menu.grid(row=wrow, column=1, padx=(0,20), sticky="w")
         wrow += 1
 
-        # Flash Button
         # Flash Button
         self.fTxModuleInternal_fFlash = ctk.CTkFrame(self.fTxModuleInternal, corner_radius=0, fg_color="transparent")
         self.fTxModuleInternal_fFlash.grid(row=wrow, column=0, columnspan=2, padx=20, pady=20)
