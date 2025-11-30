@@ -1563,6 +1563,7 @@ class App(ctk.CTk):
         _, _, description, wireless = self.get_metadata('tx', device_type, firmware_filename)
         if wireless != None:
             self.fTxModuleExternal_fWirelessBridge.grid()
+            self.fTxModuleExternal_WirelessBridge_FullErase_checkbox.grid()
         else:
             self.fTxModuleExternal_fWirelessBridge.grid_remove()
 
@@ -1898,6 +1899,7 @@ class App(ctk.CTk):
         _, _, description, wireless = self.get_metadata('txint', device_type, firmware_filename)
         if wireless != None:
             self.fTxModuleInternal_fWirelessBridge.grid()
+            self.fTxModuleInternal_WirelessBridge_FullErase_checkbox.grid()
         else:
             self.fTxModuleInternal_fWirelessBridge.grid_remove()
 
