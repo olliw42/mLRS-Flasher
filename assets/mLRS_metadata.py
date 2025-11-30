@@ -160,6 +160,7 @@ g_targetDict = {
                 'chipset' : 'esp32c3',
                 'reset' : 'no dtr',
                 'baud' : 115200,
+                'erase' : 'full_erase',
             },
         },
         'tx-radiomaster-ranger' : {
