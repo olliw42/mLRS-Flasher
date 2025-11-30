@@ -51,7 +51,7 @@ def os_system(arg):
         print("ERROR: os system res =", res)
 
 def os_popen(arg):
-    subprocess.Popen(arg, creationflags=subprocess.CREATE_NEW_CONSOLE)    
+    subprocess.Popen(arg, creationflags=subprocess.CREATE_NEW_CONSOLE)
 
 def os_system_run_as_script():
     #return False
@@ -208,7 +208,7 @@ def find_serial_ports_esp_tx_devices():
             continue
         if port.vid == 0x0483 and port.pid == 0x374E: # this is STLink
             continue
-        if port.vid == 0x0483 and port.pid == 0x5740: # this is EdgeTx/OpenTx
+        if port.vid == 0x0483 and port.pid == 0x5740: # this is EdgeTx/OpenTx, vid registered via pidcodes, so unique
             continue
         if port.vid == 0x1209 and (port.pid == 0x5740 or port.pid == 0x5741): # this is ArduPilot
             continue
@@ -233,7 +233,7 @@ def find_serial_ports_usbttl_devices():
             continue
         if port.vid == 0x0483 and port.pid == 0x374E: # this is STLink
             continue
-        if port.vid == 0x0483 and port.pid == 0x5740: # this is EdgeTx/OpenTx
+        if port.vid == 0x0483 and port.pid == 0x5740:  # this is EdgeTx/OpenTx, vid registered via pidcodes, so unique
             continue
         if port.vid == 0x1209 and (port.pid == 0x5740 or port.pid == 0x5741): # this is ArduPilot
             continue

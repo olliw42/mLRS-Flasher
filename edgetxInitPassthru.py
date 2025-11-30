@@ -5,7 +5,7 @@
 # https://www.gnu.org/licenses/gpl-3.0.de.html
 #************************************************************
 # Open passthrough to internal Tx module of EdgeTx radios
-# 3. Mai. 2025
+# 29. Nov. 2025
 #************************************************************
 # Comment: does not work with OpenTx
 
@@ -30,12 +30,8 @@ def find_radio_serial_ports():
         return []
     radioportList = []
     for port in portList:
-        if port.vid == 0x0483 and port.pid == 0x5740:
-            if os.name == 'posix': # we do have more info on this os
-                if port.manufacturer == 'EdgeTX':
-                    radioportList.append(port.device)
-            else:
-                radioportList.append(port.device)
+        if port.vid == 0x0483 and port.pid == 0x5740: # this is EdgeTx/OpenTx, vid registered via pidcodes, so unique
+            radioportList.append(port.device)
     return radioportList
 
 
@@ -117,7 +113,7 @@ def open_passthrough(comport = None, baudrate = 115200, wirelessbridge = None):
         if not res:
             do_error('Sorry, something went wrong.')
 
-    # EdgeTx version <= 2.10 responds with 'bootpin set', on >= 2.11 the response is 'bootcmd set' 
+    # EdgeTx version <= 2.10 responds with 'bootpin set', on >= 2.11 the response is 'bootcmd set'
     if not wirelessbridge:
         res = execute_cli_command(ser, b'set rfmod 0 bootpin 1', expected = b'boot')
         if not res:
@@ -136,7 +132,7 @@ def open_passthrough(comport = None, baudrate = 115200, wirelessbridge = None):
     if wirelessbridge:
         print('Waiting 7 secs for wireless bridge configuration to complete...')
         time.sleep(7)
-        
+
     res = execute_cli_command(ser, b'set rfmod 0 bootpin 1', expected = b'boot')
     if not res:
         do_error('Sorry, something went wrong.')
