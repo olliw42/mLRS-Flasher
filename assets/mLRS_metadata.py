@@ -6,7 +6,7 @@
 # OlliW @ www.olliw.eu
 #************************************************************
 # mLRS Meta Data for mLRS Flasher Desktop App
-# 30. Nov. 2025
+# 4. Dez. 2025
 #************************************************************
 
 
@@ -41,6 +41,7 @@ g_receiverDeviceTypeDict = {
 g_txModuleInternalDeviceTypeDict = {
     'Jumper Radio' :      { 'fname' : 'tx-jumper-internal',      'chipset' : 'esp32' },
     'RadioMaster Radio' : { 'fname' : 'tx-radiomaster-internal', 'chipset' : 'esp32' },
+    'FlySky Radio' :      { 'fname' : 'tx-flysky-internal',      'chipset' : 'esp32s3' },
 }
 
 
@@ -239,6 +240,20 @@ g_targetDict = {
                 'baud' : 115200,
                 'erase' : 'full_erase',
             },
+        },
+    },
+    'tx-flysky-internal' : {
+        'description' :
+            "Supported radios: PA01\n" +
+            "Flash method: radio passthrough\n" +
+            "  - with radio powered up, connect to USB of your radio\n" + "  - select 'USB Serial (VCP)'\n" +
+            "\nWireless bridge: ESP32C3\n" +
+            "For flashing the wireless bridge:\n" +
+            "  - with radio powered up, connect to USB of your radio\n" + "  - select 'USB Serial (VCP)'\n",
+        'wireless' : {
+            'chipset' : 'esp32c3',
+            'baud' : 115200,
+            'erase' : 'full_erase',
         },
     },
 
