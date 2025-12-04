@@ -287,7 +287,7 @@ def _flash_esptool_argstr(programmer, firmware, comport, baudrate):
             '0x10000 ' +
             '"' + firmware + '"'
             )
-    elif 'esp32' in programmer:
+    elif 'esp32' in programmer: # catches 'esp32', 'esp32s3', 'esp32c3' and so on
         # flash was changed to 80 MHz QIO with this PR: https://github.com/olliw42/mLRS/pull/320
         # observed that the code will still run but flash writes fail with older bootloader
         firmware_version = int(''.join(re.search(r'v(\d+\.\d+\.\d+)', os.path.basename(firmware)).group(1).split('.')))
@@ -733,22 +733,20 @@ def flashDevice(programmer, url, filename, comport=None, baudrate=None):
     #print(filepath)
     if 'wirelessbridge' in programmer:
         # handle WirelessBridge
+        # ESP
         if 'internal' in programmer:
-            if ('esp8266' in programmer or 'esp8285' in programmer or 'esp32c3' in programmer):
+            if ('esp' in programmer): # catches 'esp8266', 'esp8255', 'esp32', 'esp32s3', 'esp32c3' and so on
                 flashInternalElrsTxModuleWirelessBridge(programmer, filepath)
                 return
         else:
-            if ('esp8266' in programmer or 'esp8285' in programmer):
-                flashEspToolProgrammer(programmer, filepath, comport, baudrate)
-                return
-            elif ('esp32c3' in programmer):
+            if ('esp' in programmer): # catches 'esp8266', 'esp8255', 'esp32', 'esp32s3', 'esp32c3' and so on
                 flashEspToolProgrammer(programmer, filepath, comport, baudrate)
                 return
     elif 'stm32' in programmer:
         # STM32
         flashSTM32CubeProgrammer(programmer, filepath, comport, baudrate)
         return
-    elif 'esp' in programmer: # 'esp32'
+    elif 'esp' in programmer: # catches 'esp8266', 'esp8255', 'esp32', 'esp32s3', 'esp32c3' and so on
         # ESP
         if 'internal' in programmer:
             flashInternalElrsTxModule(programmer, filepath)
@@ -1019,7 +1017,7 @@ class App(ctk.CTk):
                     else:
                         flashDevice(chipset + ' stlink', key['url'], firmware_filename)
                     return
-                elif 'esp32' in chipset:
+                elif 'esp32' in chipset: # catches 'esp32', 'esp32s3', 'esp32c3' and so on
                     comport = self.fTxModuleExternal_ComPort_menu.get()
                     print('--->',comport)
                     flashDevice(chipset, key['url'], firmware_filename, comport=comport, baudrate=921600)
@@ -1041,22 +1039,27 @@ class App(ctk.CTk):
         if 'chipset' in wireless:
             programmer = programmer + ' ' + wireless['chipset']
         else:
-            programmer = programmer + ' esp8266'
+            programmer = programmer + ' esp8266' # default assumption
         if 'reset' in wireless:
             programmer = programmer + ' ' + wireless['reset']
         else:
-            programmer = programmer + ' dtr'
+            programmer = programmer + ' dtr' # default assumption
         if 'erase' in wireless:
             programmer = programmer + ' ' + wireless['erase']
         if 'baud' in wireless:
             baudrate = wireless['baud']
         else:
-            baudrate = 921600
+            baudrate = 921600 # default assumption
         #url = 'https://raw.githubusercontent.com/olliw42/mLRS/refs/heads/main/firmware/wirelessbridge-esp8266/mlrs-wireless-bridge-esp8266.ino.bin'
-        if 'esp32c3' in programmer: # the wireless chipset is in wireless['chipset'], not chipset, so we test programmer to catch the fallback
+        # the wireless chipset is in wireless['chipset'], not chipset, so we test programmer to catch the fallback
+        # currently must be esp82xx or esp32c3
+        if 'esp32c3' in programmer: 
             firmware_filename = 'mlrs-wireless-bridge-esp32c3.ino.bin'
-        else:
+        elif 'esp8266' in programmer or 'esp8255' in programmer: 
             firmware_filename = 'mlrs-wireless-bridge-esp8266.ino.bin'
+        else:
+            print('ERROR: flashTxModuleExternalWirelessBridgeFirmware() [2]')
+            return
         url = g_wirelessbridge_path_url + firmware_filename
         flashDevice(programmer, url, firmware_filename, comport, baudrate)
 
@@ -1111,7 +1114,7 @@ class App(ctk.CTk):
             print('ERROR: flashTxModuleInternalFirmware() [1]')
             return
         chipset, flashmethod, description, wireless = self.get_metadata('txint', device_type, firmware_filename)
-        if chipset not in ('esp32', 'esp32s3'): # currently must be esp32 or esp32s3
+        if chipset != 'esp32' and chipset != 'esp32s3': # currently must be esp32 or esp32s3
             print('ERROR: flashTxModuleInternalFirmware() [3]')
             sys.exit(1)
         for key in self.txIntFirmwareFilesList:
@@ -1134,15 +1137,20 @@ class App(ctk.CTk):
         if 'chipset' in wireless:
             programmer = programmer + ' ' + wireless['chipset']
         else:
-            programmer = programmer + ' esp8266'
+            programmer = programmer + ' esp8266' # default assumption
         if 'erase' in wireless:
             programmer = programmer + ' ' + wireless['erase']
         #print(programmer)
         #url = 'https://raw.githubusercontent.com/olliw42/mLRS/refs/heads/main/firmware/wirelessbridge-esp8266/mlrs-wireless-bridge-esp8266.ino.bin'
-        if 'esp32c3' in programmer: # the wireless chipset is in wireless['chipset'], not chipset, so we test programmer to catch the fallback
+        # the wireless chipset is in wireless['chipset'], not chipset, so we test programmer to catch the fallback        
+        # currently must be esp82xx or esp32c3
+        if 'esp32c3' in programmer: 
             firmware_filename = 'mlrs-wireless-bridge-esp32c3.ino.bin'
-        else:
+        elif 'esp8266' in programmer or 'esp8255' in programmer: 
             firmware_filename = 'mlrs-wireless-bridge-esp8266.ino.bin'
+        else:
+            print('ERROR: flashTxModuleInternalWirelessBridgeFirmware() [1]')
+            return
         url = g_wirelessbridge_path_url + firmware_filename
         flashDevice(programmer, url, firmware_filename)
 
