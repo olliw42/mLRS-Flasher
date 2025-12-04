@@ -1520,6 +1520,7 @@ class App(ctk.CTk):
         # Flash Button
         self.fTxModuleExternal_fFlash = ctk.CTkFrame(self.fTxModuleExternal, corner_radius=0, fg_color="transparent")
         self.fTxModuleExternal_fFlash.grid(row=wrow, column=0, columnspan=2, padx=20, pady=20, sticky='we')
+        self.fTxModuleExternal_fFlash.grid_columnconfigure(2, weight=1)
         wrow += 1
 
         self.fTxModuleExternal_Flash_button = CTkFlashButton(self.fTxModuleExternal_fFlash,
@@ -1537,16 +1538,13 @@ class App(ctk.CTk):
         self.fTxModuleExternal_ComPort_menu.grid_remove() # grid_remove() memorizes settings, grid_forget() looses them
 
         self.fTxModuleExternal_FullErase_checkbox = ctk.CTkCheckBox(self.fTxModuleExternal_fFlash, text="Erase")
-        self.fTxModuleExternal_FullErase_checkbox.grid(row=0, column=2, sticky='e')
+        self.fTxModuleExternal_FullErase_checkbox.grid(row=0, column=2, padx=20, sticky='e')
         self.fTxModuleExternal_FullErase_checkbox.grid_remove() # hidden by default
-
-        # Configure column weights for layout
-        self.fTxModuleExternal_fFlash.grid_columnconfigure(2, weight=1)
 
         #-- Wireless Bridge --
         self.fTxModuleExternal_fWirelessBridge = ctk.CTkFrame(self.fTxModuleExternal, corner_radius=0, fg_color="transparent")
         self.fTxModuleExternal_fWirelessBridge.grid(row=wrow, column=0, columnspan=2, padx=20, pady=20, sticky="we")
-        self.fTxModuleExternal_fWirelessBridge.grid_columnconfigure(0, weight=1)
+        self.fTxModuleExternal_fWirelessBridge.grid_columnconfigure(1, weight=1)
         wrow += 1
 
         self.fTxModuleExternal_WirelessBridge_label = ctk.CTkLabel(self.fTxModuleExternal_fWirelessBridge,
@@ -1558,7 +1556,7 @@ class App(ctk.CTk):
         self.fTxModuleExternal_WirelessBridgeFlash_button = CTkFlashButton(self.fTxModuleExternal_fWirelessBridge,
             text = "Flash Wireless Bridge",
             command = self.fTxModuleExternal_WirelessBridgeFlash_button_event)
-        self.fTxModuleExternal_WirelessBridgeFlash_button.grid(row=1, column=0, pady=(20,0))
+        self.fTxModuleExternal_WirelessBridgeFlash_button.grid(row=1, column=0, padx=(125,0), pady=(20,0))
 
         self.fTxModuleExternal_WirelessBridge_FullErase_checkbox = ctk.CTkCheckBox(self.fTxModuleExternal_fWirelessBridge, text="Erase")
         self.fTxModuleExternal_WirelessBridge_FullErase_checkbox.grid(row=1, column=1, padx=20, pady=(20,0), sticky='e')
@@ -1741,10 +1739,9 @@ class App(ctk.CTk):
     def fReceiver_UpdateWidgets(self):
         device_type = self.fReceiver_DeviceType_menu.get()
         firmware_filename = self.fReceiver_FirmwareFile_menu.get()
-        _, flashmethod, description, wireless = self.get_metadata('rx', device_type, firmware_filename)
+        chipset, flashmethod, description, wireless = self.get_metadata('rx', device_type, firmware_filename)
         
         # Conditional visibility for Full Chip Erase checkbox
-        chipset = _ # get_metadata returns chipset as first arg
         if chipset and 'esp' in chipset.lower():
             self.fReceiver_FullErase_checkbox.grid()
         else:
@@ -1884,7 +1881,7 @@ class App(ctk.CTk):
         #-- Wireless Bridge --
         self.fTxModuleInternal_fWirelessBridge = ctk.CTkFrame(self.fTxModuleInternal, corner_radius=0, fg_color="transparent")
         self.fTxModuleInternal_fWirelessBridge.grid(row=wrow, column=0, columnspan=2, padx=20, pady=20, sticky="we")
-        self.fTxModuleInternal_fWirelessBridge.grid_columnconfigure(0, weight=1)
+        self.fTxModuleInternal_fWirelessBridge.grid_columnconfigure(1, weight=1)
         wrow += 1
 
         self.fTxModuleInternal_WirelessBridge_label = ctk.CTkLabel(self.fTxModuleInternal_fWirelessBridge,
@@ -1896,7 +1893,7 @@ class App(ctk.CTk):
         self.fTxModuleInternal_WirelessBridgeFlash_button = CTkFlashButton(self.fTxModuleInternal_fWirelessBridge,
             text = "Flash Wireless Bridge",
             command = self.fTxModuleInternal_WirelessBridgeFlash_button_event)
-        self.fTxModuleInternal_WirelessBridgeFlash_button.grid(row=1, column=0, pady=(20,0))
+        self.fTxModuleInternal_WirelessBridgeFlash_button.grid(row=1, column=0, padx=(125,0), pady=(20,0))
 
         self.fTxModuleInternal_WirelessBridge_FullErase_checkbox = ctk.CTkCheckBox(self.fTxModuleInternal_fWirelessBridge, text="Erase")
         self.fTxModuleInternal_WirelessBridge_FullErase_checkbox.grid(row=1, column=1, padx=20, pady=(20,0), sticky='e')
