@@ -1532,7 +1532,8 @@ class App(ctk.CTk):
         self.fTxModuleExternal_ComPort_menu = CTkCompPortOptionMenu(self.fTxModuleExternal_fFlash,
             porttype = 'esp,tx',
             values=['COM1'],
-            width=10,
+            width=120,
+            dynamic_resizing=False,
             )#command=self.fTxModuleExternal_ComPort_menu_event)
         self.fTxModuleExternal_ComPort_menu.grid(row=0, column=1, padx=20)
         self.fTxModuleExternal_ComPort_menu.grid_remove() # grid_remove() memorizes settings, grid_forget() looses them
@@ -1578,7 +1579,7 @@ class App(ctk.CTk):
     def fTxModuleExternal_UpdateWidgets(self):
         device_type = self.fTxModuleExternal_DeviceType_menu.get()
         firmware_filename = self.fTxModuleExternal_FirmwareFile_menu.get()
-        _, _, description, wireless = self.get_metadata('tx', device_type, firmware_filename)
+        chipset, _, description, wireless = self.get_metadata('tx', device_type, firmware_filename)
         if wireless != None:
             self.fTxModuleExternal_fWirelessBridge.grid()
             self.fTxModuleExternal_WirelessBridge_FullErase_checkbox.grid()
@@ -1586,8 +1587,7 @@ class App(ctk.CTk):
             self.fTxModuleExternal_fWirelessBridge.grid_remove()
 
         # Conditional visibility for Full Chip Erase checkbox
-        chipset, _, _, _ = self.get_metadata('tx', device_type, firmware_filename)
-        if chipset and 'esp' in chipset.lower():
+        if chipset and 'esp' in chipset:
             self.fTxModuleExternal_FullErase_checkbox.grid()
         else:
             self.fTxModuleExternal_FullErase_checkbox.grid_remove()
@@ -1742,7 +1742,7 @@ class App(ctk.CTk):
         chipset, flashmethod, description, wireless = self.get_metadata('rx', device_type, firmware_filename)
         
         # Conditional visibility for Full Chip Erase checkbox
-        if chipset and 'esp' in chipset.lower():
+        if chipset and 'esp' in chipset:
             self.fReceiver_FullErase_checkbox.grid()
         else:
             self.fReceiver_FullErase_checkbox.grid_remove()
@@ -1913,7 +1913,7 @@ class App(ctk.CTk):
     def fTxModuleInternal_UpdateWidgets(self):
         device_type = self.fTxModuleInternal_DeviceType_menu.get()
         firmware_filename = self.fTxModuleInternal_FirmwareFile_menu.get()
-        _, _, description, wireless = self.get_metadata('txint', device_type, firmware_filename)
+        chipset, _, description, wireless = self.get_metadata('txint', device_type, firmware_filename)
         if wireless != None:
             self.fTxModuleInternal_fWirelessBridge.grid()
             self.fTxModuleInternal_WirelessBridge_FullErase_checkbox.grid()
@@ -1921,8 +1921,7 @@ class App(ctk.CTk):
             self.fTxModuleInternal_fWirelessBridge.grid_remove()
 
         # Conditional visibility for Full Chip Erase checkbox
-        chipset, _, _, _ = self.get_metadata('txint', device_type, firmware_filename)
-        if chipset and 'esp' in chipset.lower():
+        if chipset and 'esp' in chipset:
             self.fTxModuleInternal_FullErase_checkbox.grid()
         else:
             self.fTxModuleInternal_FullErase_checkbox.grid_remove()
