@@ -1,0 +1,13 @@
+certifi==2025.4.26
+charset-normalizer==3.4.2
+customtkinter==5.2.2
+darkdetect==0.8.0
+future==1.0.0
+idna==3.10
+iso8601==2.1.0
+packaging==25.0
+pillow==11.2.1
+PyYAML==6.0.2
+requests==2.32.3
+serial==0.0.97
+urllib3==2.4.0
