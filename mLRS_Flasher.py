@@ -269,6 +269,24 @@ def _flash_esptool_argstr(programmer, firmware, comport, baudrate):
             '0x10000 ' +
             '"' + firmware + '"'
             )
+    elif 'esp32s3' in programmer: # must come before we test for 'esp32'!
+        args = (
+            '--chip esp32s3 ' +
+            '--port "' + comport + '" ' +
+            '--baud ' + str(baudrate) + ' ' +
+            before_arg + ' --after hard_reset ' +
+            'write_flash ' + erase_arg +
+            '-z ' +
+            '--flash_mode dio --flash_freq 40m --flash_size 8MB ' +
+            '0x0000 ' +
+            '"' + os.path.join(assets_path,'esp32s3','bootloader.bin') + '" ' +
+            '0x8000 ' +
+            '"' + os.path.join(assets_path,'esp32s3','partitions.bin') + '" ' +
+            '0xe000 ' +
+            '"' + os.path.join(assets_path,'esp32s3','boot_app0.bin') + '" ' +
+            '0x10000 ' +
+            '"' + firmware + '"'
+            )
     elif 'esp32' in programmer:
         # flash was changed to 80 MHz QIO with this PR: https://github.com/olliw42/mLRS/pull/320
         # observed that the code will still run but flash writes fail with older bootloader
@@ -438,6 +456,7 @@ def flash_internal_elrs_tx_module(programmer, firmware, baudrate, wirelessbridge
     print('The firmware to flash is:', firmware)
 
     # TODO: can we catch if this was succesfull?
+    print(programmer, firmware, radioport, baudrate)
     flash_esptool(programmer, firmware, radioport, baudrate)
 
     print()
@@ -450,10 +469,10 @@ def flash_internal_elrs_tx_module(programmer, firmware, baudrate, wirelessbridge
 def flashInternalElrsTxModule(programmer, firmware):
     if os_system_run_as_script():
         #print('run as script file')
-        flash_internal_elrs_tx_module_win_as_script('esp32', firmware, baudrate = 921600, wirelessbridge = False)
+        flash_internal_elrs_tx_module_win_as_script(programmer, firmware, baudrate = 921600, wirelessbridge = False)
         return # done
 
-    flash_internal_elrs_tx_module('esp32', firmware, 921600, False)
+    flash_internal_elrs_tx_module(programmer, firmware, 921600, False)
 
 
 def flashInternalElrsTxModuleWirelessBridge(programmer, firmware):
@@ -1093,12 +1112,17 @@ class App(ctk.CTk):
             print('ERROR: flashTxModuleInternalFirmware() [1]')
             return
         chipset, flashmethod, description, wireless = self.get_metadata('txint', device_type, firmware_filename)
-        if chipset != 'esp32': # currently must be esp32
+        if chipset not in ('esp32', 'esp32s3'): # currently must be esp32 or esp32s3
             print('ERROR: flashTxModuleInternalFirmware() [3]')
             sys.exit(1)
         for key in self.txIntFirmwareFilesList:
             if firmware_filename in key['path']: # that's our firmware entry
-                flashDevice('esp32 internal', key['url'], firmware_filename)
+                if 'esp32s3' in chipset:
+                    print('ESP32-S3 detected')
+                    flashDevice('esp32s3 internal', key['url'], firmware_filename)
+                else:
+                    print('ESP32 detected')
+                    flashDevice('esp32 internal', key['url'], firmware_filename)
                 return
         print('ERROR: flashTxModuleInternalFirmware() [2]')
 
