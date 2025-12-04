@@ -456,7 +456,6 @@ def flash_internal_elrs_tx_module(programmer, firmware, baudrate, wirelessbridge
     print('The firmware to flash is:', firmware)
 
     # TODO: can we catch if this was succesfull?
-    print(programmer, firmware, radioport, baudrate)
     flash_esptool(programmer, firmware, radioport, baudrate)
 
     print()
@@ -1118,10 +1117,8 @@ class App(ctk.CTk):
         for key in self.txIntFirmwareFilesList:
             if firmware_filename in key['path']: # that's our firmware entry
                 if 'esp32s3' in chipset:
-                    print('ESP32-S3 detected')
                     flashDevice('esp32s3 internal', key['url'], firmware_filename)
                 else:
-                    print('ESP32 detected')
                     flashDevice('esp32 internal', key['url'], firmware_filename)
                 return
         print('ERROR: flashTxModuleInternalFirmware() [2]')
