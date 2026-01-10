@@ -1,0 +1,214 @@
+/* panel component styles - 2026-01-09 */
+.panel {
+  max-width: 1200px;
+  margin: 0 auto;
+  /* Glassmorphism Panel */
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--backdrop-blur));
+  -webkit-backdrop-filter: blur(var(--backdrop-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 16px;
+  padding: 24px; /* Reduced from 32px */
+  animation: fadeIn 0.4s ease-out;
+}
+
+.panel-title {
+  margin: 0 0 20px 0; /* Reduced from 32px */
+  font-size: 24px; /* Slightly smaller for compactness */
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.025em;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.panel-title::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 20px; /* Matched to font size */
+  background: var(--accent-primary);
+  border-radius: 2px;
+  box-shadow: 0 0 10px var(--accent-primary);
+}
+
+/* 2-column grid for form fields */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px; /* Reduced from 32px */
+  margin-bottom: 20px; /* Reduced from 32px */
+}
+
+/* full-width items span both columns */
+.form-grid .full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px; /* Reduced from 10px */
+  font-size: 12px; /* Slightly smaller */
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.select-wrapper::after {
+  content: "";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--text-tertiary);
+  pointer-events: none;
+  z-index: 10;
+  transition: transform 0.2s ease;
+}
+
+.select-wrapper:hover::after {
+  border-top-color: var(--text-primary);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.form-group select {
+  width: 100%;
+  height: 40px; /* Reduced from 48px */
+  padding: 0 40px 0 12px;
+  /* Glass Inputs */
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px; /* Slightly smaller radius */
+  color: var(--text-primary);
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 13px; /* Slightly smaller font */
+}
+
+.form-group select:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.form-group select:focus {
+  border-color: var(--accent-primary);
+  outline: none;
+  background-color: rgba(15, 23, 42, 0.8);
+  box-shadow: 0 0 0 3px var(--accent-subtle); /* Smaller shadow ring */
+}
+
+.form-group select option {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  padding: 12px;
+}
+
+.port-group .port-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.port-group select {
+  flex: 1;
+}
+
+.button-row {
+  margin-top: 24px; /* Reduced from 40px */
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 16px; /* Reduced from 24px */
+  border-top: 1px solid var(--glass-border);
+}
+
+.warning-box {
+  background-color: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 8px;
+  padding: 12px 16px; /* Reduced padding */
+  margin: 16px 0; /* Reduced from 24px */
+  color: #fbbf24;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.error-box {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 16px 0;
+  color: #fca5a5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.description-box {
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 16px; /* Reduced from 24px */
+  margin: 16px 0;
+}
+
+.description-box pre {
+  margin: 0;
+  white-space: pre-wrap;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: 12px; /* Smaller font for logs/desc */
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.wireless-bridge-section {
+  margin-top: 24px; /* Reduced from 40px */
+  padding-top: 20px; /* Reduced from 32px */
+  border-top: 1px solid var(--glass-border);
+  position: relative;
+}
+
+/* Section Header Badge */
+.wireless-bridge-section h3 {
+  margin: 0 0 16px 0; /* Reduced from 24px */
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wireless-bridge-section h3::after {
+  content: 'Advanced';
+  font-size: 10px;
+  text-transform: uppercase;
+  background: var(--glass-highlight);
+  border: 1px solid var(--glass-border);
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+}

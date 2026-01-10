@@ -1976,9 +1976,20 @@ class App(ctk.CTk):
 #--------------------------------------------------
 
 if __name__ == "__main__":
-    app = App()
-    app.update()
-    app.after(10,app.after_startup())
-    app.mainloop()
-    app.closed()
+    try:
+        app = App()
+        app.update()
+        app.after(10,app.after_startup())
+        app.mainloop()
+        app.closed()
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        print(f"CRITICAL ERROR: {e}")
+        # If running from a double-click, this keeps the window open so the user can read the error
+        try:
+            input("Press Enter to exit...")
+        except:
+            pass
+        sys.exit(1)
 

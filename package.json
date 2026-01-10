@@ -1,0 +1,19 @@
+{
+  "name": "mlrs-flasher",
+  "version": "0.2.0",
+  "description": "mLRS Flasher Desktop App - Flash mLRS firmware to Tx modules and receivers",
+  "author": "JLP",
+  "license": "GPL-3.0",
+  "scripts": {
+    "install:python": "node scripts/download-python.js",
+    "install:deps:win": "python/windows/python.exe -m pip install requests pyserial pymavlink Pillow intelhex --target python/windows/Lib/site-packages --no-user",
+    "install:deps:mac": "python/macos/python/bin/python3 -m pip install requests pyserial pymavlink Pillow intelhex",
+    "install:deps:linux": "python/linux/python/bin/python3 -m pip install requests pyserial pymavlink Pillow intelhex",
+    "install:deps:all": "npm run install:deps:win && npm run install:deps:mac && npm run install:deps:linux",
+    "dev": "cd electron && npm run dev",
+    "build": "cd electron && npm run build",
+    "build:win": "cd electron && npm run build:win",
+    "build:mac": "cd electron && npm run build:mac",
+    "build:linux": "cd electron && npm run build:linux"
+  }
+}

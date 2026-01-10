@@ -1,0 +1,144 @@
+{
+  "name": "mlrs-flasher-electron",
+  "version": "0.2.0",
+  "description": "Electron frontend for mLRS Flasher",
+  "author": "JLP",
+  "main": "main.cjs",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "build": "vite build",
+    "build:win": "vite build && electron-builder --win",
+    "build:mac": "vite build && electron-builder --mac",
+    "build:linux": "vite build && electron-builder --linux"
+  },
+  "build": {
+    "appId": "eu.jlp.mlrs-flasher",
+    "productName": "mLRS Flasher",
+    "icon": "../assets/mLRS_logo_round.ico",
+    "directories": {
+      "output": "../dist"
+    },
+    "files": [
+      "main.cjs",
+      "preload.cjs",
+      "dist/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "../scripts",
+        "to": "scripts",
+        "filter": [
+          "*.py",
+          "*.json",
+          "!download-python.js",
+          "!optimize_python.py",
+          "!requests_cache.py",
+          "!__pycache__"
+        ]
+      },
+      {
+        "from": "../thirdparty/esptool",
+        "to": "thirdparty/esptool",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "../thirdparty/mavlink",
+        "to": "thirdparty/mavlink",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "../assets",
+        "to": "assets",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "../assets/mLRS_logo_round.ico",
+      "extraResources": [
+        {
+          "from": "../python/windows",
+          "to": "python",
+          "filter": [
+            "**/*"
+          ]
+        },
+        {
+          "from": "../thirdparty/STM32CubeProgrammer/win",
+          "to": "thirdparty/STM32CubeProgrammer/win",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "../assets/mLRS_logo_512.png",
+      "category": "public.app-category.utilities",
+      "extraResources": [
+        {
+          "from": "../python/macos",
+          "to": "python",
+          "filter": [
+            "**/*"
+          ]
+        },
+        {
+          "from": "../thirdparty/STM32CubeProgrammer/mac",
+          "to": "thirdparty/STM32CubeProgrammer/mac",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "../assets/mLRS_logo_512.png",
+      "extraResources": [
+        {
+          "from": "../python/linux",
+          "to": "python",
+          "filter": [
+            "**/*"
+          ]
+        },
+        {
+          "from": "../thirdparty/STM32CubeProgrammer/linux",
+          "to": "thirdparty/STM32CubeProgrammer/linux",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.1.2",
+    "concurrently": "^9.2.1",
+    "electron": "^39.2.7",
+    "electron-builder": "^26.4.0",
+    "vite": "^7.3.1",
+    "wait-on": "^9.0.3"
+  },
+  "dependencies": {
+    "lucide-react": "^0.562.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  },
+  "overrides": {
+    "rimraf": "^5.0.0"
+  }
+}

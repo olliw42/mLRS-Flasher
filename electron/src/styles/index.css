@@ -1,0 +1,168 @@
+/* global styles and css reset - 2026-01-09 */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+:root {
+  /* Premium Slate/Blue Palette - Lightened */
+  --bg-primary: #0f172a;   /* Slate 900 (was 950) */
+  --bg-secondary: #1e293b; /* Slate 800 (was 900) */
+  --bg-tertiary: #334155;  /* Slate 700 (was 800) */
+  
+  /* Text Colors */
+  --text-primary: #f1f5f9; /* Slate 100 */
+  --text-secondary: #cbd5e1; /* Slate 300 */
+  --text-tertiary: #94a3b8; /* Slate 400 */
+  
+  /* Accent Colors - Electric Blue */
+  --accent-primary: #3b82f6; /* Blue 500 */
+  --accent-hover: #2563eb;   /* Blue 600 */
+  --accent-subtle: rgba(59, 130, 246, 0.15);
+  
+  /* Status Colors */
+  --success: #10b981;
+  --success-bg: rgba(16, 185, 129, 0.15);
+  --warning: #f59e0b;
+  --warning-bg: rgba(245, 158, 11, 0.15);
+  --error: #ef4444;
+  --error-bg: rgba(239, 68, 68, 0.15);
+  
+  /* Glassmorphism System - More Translucent/Lighter */
+  --glass-bg: rgba(30, 41, 59, 0.65); /* Lighter base with good opacity */
+  --glass-border: rgba(255, 255, 255, 0.1); /* Slightly stronger border */
+  --glass-highlight: rgba(255, 255, 255, 0.05);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  --backdrop-blur: 16px;
+  
+  /* Common Borders */
+  --border: var(--glass-border);
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent body scroll, handle internally */
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  /* Mesh Gradient Background - Brighter */
+  background-color: var(--bg-primary);
+  background-image: 
+    radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.15), transparent 35%),
+    radial-gradient(circle at 100% 0%, rgba(16, 185, 129, 0.1), transparent 35%),
+    radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.1), transparent 35%);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* Global Animation Classes */
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Form Elements Reset */
+select, input, button {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Premium Button Styles */
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-hover) 100%);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 8px -1px rgba(37, 99, 235, 0.3);
+  filter: brightness(110%);
+}
+
+.btn-primary:disabled {
+  background: var(--bg-tertiary);
+  color: var(--text-tertiary);
+  border-color: transparent;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Global Loading Spinner */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 16px;
+  color: var(--text-secondary);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }

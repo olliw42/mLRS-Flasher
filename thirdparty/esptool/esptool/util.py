@@ -72,6 +72,7 @@ def print_overwrite(message, last_line=False):
         print("\r%s" % message, end="\n" if last_line else "")
     else:
         print(message)
+    sys.stdout.flush()
 
 
 def expand_chip_name(chip_name):

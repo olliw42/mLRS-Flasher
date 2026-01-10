@@ -13,6 +13,11 @@ tools/win_dist/*
 tools/venv/*
 .DS_Store
 
+# electron app
+electron/node_modules/
+electron/dist/
+python/
+
 # Prerequisites
 *.d
 

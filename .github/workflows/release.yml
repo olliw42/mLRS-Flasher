@@ -1,0 +1,93 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build (${{ matrix.platform }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows
+            os: windows-latest
+            script: build-scripts/build-windows.bat
+            artifact_name: windows-binary
+            artifact_path: "dist/*.exe" # using quotes for safety
+          - platform: linux
+            os: ubuntu-latest
+            script: ./build-scripts/build-linux.sh
+            artifact_name: linux-binary
+            artifact_path: "dist/*.AppImage"
+          - platform: macos
+            os: macos-latest
+            script: ./build-scripts/build-mac.sh
+            artifact_name: macos-binary
+            artifact_path: "dist/*.dmg"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: electron/package-lock.json
+
+      - name: Make scripts executable
+        if: runner.os != 'Windows'
+        run: chmod +x build-scripts/*.sh
+
+      - name: Run Build Script
+        run: ${{ matrix.script }}
+
+      - name: Debug Output (Windows)
+        if: matrix.platform == 'windows'
+        run: |
+          echo "Checking Python configuration:"
+          cat python/windows/python*._pth
+          echo "Listing dist directory:"
+          ls -R dist || echo "Dist folder not found yet."
+        shell: bash
+
+      - name: Upload to shelf
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: ${{ matrix.artifact_path }}
+          if-no-files-found: error # Fail here so we know exactly which platform broke
+          retention-days: 1
+
+  publish:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Download all binaries
+        uses: actions/download-artifact@v4
+        with:
+          path: binaries
+          merge-multiple: true
+
+      - name: List found binaries
+        run: ls -R binaries
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: binaries/**/*
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
