@@ -56,24 +56,43 @@ const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
 // 2026-01-10
 ```
 
-## 5. Synchronization
+## 5. CLI Script Metadata
+Update the date header in the CLI interface script.
+
+- **File**: `/scripts/mLRS_Flasher_cli.py`
+- **Location**: Line 9 (comment header).
+
+```python
+# mLRS Flasher CLI - JSON interface for Electron
+# 2026-01-10
+```
+
+## 6. Synchronization
 After updating the `package.json` files, it is recommended to run `npm install` (or `npm install` inside the `electron` folder) to ensure `package-lock.json` is synchronized.
 
-## 6. Git Commit and Tagging
+## 7. Git Commit and Tagging
 
 Finally, commit the version changes and create a git tag to trigger the build process (GitHub Actions).
 
-```bash
-# 1. Stage all changes
-git add .
+> [!WARNING]
+> **Do NOT use `git add .` blindly.**
+> Other files (such as `mLRS_Flasher.py`, script wrappers, or `package-lock.json` updates) may have changed. Always check `git status` first to ensure you are including all relevant files for the release.
 
-# 2. Commit the changes
+```bash
+# 1. Check for modified files
+git status
+
+# 2. Stage relevant files (example)
+git add package.json electron/package.json electron/src/components/Navigation.jsx electron/main.cjs
+# Don't forget any other modified files!
+
+# 3. Commit the changes
 git commit -m "chore: bump version to 0.2.x"
 
-# 3. Create the git tag
+# 4. Create the git tag
 git tag v0.2.x
 
-# 4. Push changes and tag to remote (e.g., JLP)
+# 5. Push changes and tag to remote (e.g., JLP)
 git push JLP HEAD v0.2.x
 ```
 
