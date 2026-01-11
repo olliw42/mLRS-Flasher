@@ -6,7 +6,7 @@
 # OlliW @ www.olliw.eu
 # ************************************************************
 # mLRS flasher cli - JSON interface for Electron
-# 2026-01-11
+# 2026-01-11 (v0.2.8)
 # ************************************************************
 # command line interface for mLRS flasher, designed to be called
 # from Electron via child_process.spawn()

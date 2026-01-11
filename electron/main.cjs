@@ -1,5 +1,5 @@
 const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
-// 2026-01-11
+// 2026-01-11 (v0.2.8)
 const { spawn } = require('child_process');
 const path = require('path');
 
