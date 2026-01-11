@@ -1,5 +1,7 @@
-const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
-// 2026-01-11 (v0.2.8)
+const { app, BrowserWindow, ipcMain, dialog, Menu, shell } = require('electron');
+
+
+// 2026-01-11 (v0.3.0)
 const { spawn } = require('child_process');
 const path = require('path');
 
@@ -183,6 +185,12 @@ function createWindow() {
     mainWindow.maximize();
     mainWindow.show();
   });
+
+  // handle external links
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+    return { action: 'deny' };
+  });
 }
 
 // IPC handlers
@@ -227,6 +235,54 @@ ipcMain.handle('get-metadata', async (event, options) => {
     '--device', options.device,
     '--filename', options.filename
   ]);
+});
+
+// version comparison helper
+function isNewerVersion(current, latest) {
+  // strip 'v' prefix if present
+  const v1 = current.replace(/^v/, '').split('.').map(Number);
+  const v2 = latest.replace(/^v/, '').split('.').map(Number);
+  
+  for (let i = 0; i < Math.max(v1.length, v2.length); i++) {
+    const n1 = v1[i] || 0;
+    const n2 = v2[i] || 0;
+    if (n2 > n1) return true;
+    if (n2 < n1) return false;
+  }
+  return false;
+}
+
+ipcMain.handle('check-for-updates', async () => {
+  try {
+    const response = await fetch('https://api.github.com/repos/jlpoltrack/mLRS-Flasher/releases/latest', {
+      headers: { 'User-Agent': 'mLRS-Flasher-Electron' }
+    });
+    
+    if (!response.ok) {
+      console.error('[Update Check] GitHub API failed:', response.statusText);
+      return { updateAvailable: false };
+    }
+
+    const data = await response.json();
+    const latestVersion = data.tag_name; // e.g., "v0.2.9"
+    const currentVersion = app.getVersion(); // e.g., "0.2.8"
+
+    console.log(`[Update Check] Current: ${currentVersion}, Latest: ${latestVersion}`);
+
+    if (latestVersion && isNewerVersion(currentVersion, latestVersion)) {
+      return {
+        updateAvailable: true,
+        latestVersion,
+        releaseUrl: data.html_url,
+        body: data.body
+      };
+    }
+    
+    return { updateAvailable: false };
+  } catch (error) {
+    console.error('[Update Check] Error:', error);
+    return { error: error.message };
+  }
 });
 
 // flash command streams output, doesn't return a single result

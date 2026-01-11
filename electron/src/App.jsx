@@ -5,6 +5,7 @@ import Receiver from './components/Receiver';
 import TxModuleInternal from './components/TxModuleInternal';
 import LuaScript from './components/LuaScript';
 import Console from './components/Console';
+import UpdateBanner from './components/UpdateBanner';
 import './styles/app.css';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
   const [isFlashing, setIsFlashing] = useState(false);
   const [flashTarget, setFlashTarget] = useState(null);
   const [progress, setProgress] = useState(0);
+  const [updateInfo, setUpdateInfo] = useState(null);
 
   const hasLoaded = useRef(false);
 
@@ -56,7 +58,21 @@ function App() {
       }
     }
     
+
+    // check for updates
+    async function checkUpdates() {
+      try {
+        const update = await window.api.checkForUpdates();
+        if (update && update.updateAvailable) {
+          setUpdateInfo(update);
+        }
+      } catch (err) {
+        console.error('Failed to check for updates:', err);
+      }
+    }
+
     loadInitialData();
+    checkUpdates();
   }, []);
 
   // listen for python output
@@ -163,6 +179,13 @@ function App() {
     <div className="app">
       <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
       <div className="main-content">
+        {updateInfo && (
+          <UpdateBanner 
+            version={updateInfo.latestVersion}
+            releaseUrl={updateInfo.releaseUrl}
+            onClose={() => setUpdateInfo(null)}
+          />
+        )}
         <main className="content">
           {renderContent()}
         </main>

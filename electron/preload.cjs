@@ -10,6 +10,7 @@ contextBridge.exposeInMainWorld('api', {
   listPorts: () => ipcRenderer.invoke('list-ports'),
   getMetadata: (options) => ipcRenderer.invoke('get-metadata', options),
   pickDirectory: () => ipcRenderer.invoke('pick-directory'),
+  checkForUpdates: () => ipcRenderer.invoke('check-for-updates'),
   
   // streaming commands
   flash: (options) => ipcRenderer.send('flash', options),

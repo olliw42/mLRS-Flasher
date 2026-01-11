@@ -20,3 +20,87 @@
   overflow-y: auto; /* Scroll only this section if it doesn't fit */
   min-height: 0; /* Important for firefox/nested flex scrolling */
 }
+
+/* Update Banner */
+.update-banner {
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center the content */
+  position: relative; /* For absolute positioning of close button */
+  animation: slideDown 0.3s ease-out;
+}
+
+.update-content {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Increased gap */
+}
+
+.update-icon {
+  color: var(--accent-primary);
+  display: flex;
+  align-items: center;
+}
+
+.update-text {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.update-title {
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.update-link {
+  color: white;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 8px 16px; /* Larger padding */
+  border-radius: 6px;
+  background: var(--accent-primary); /* Primary color background */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.update-link:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.update-close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+  position: absolute; /* Absolute position */
+  right: 16px; /* Pin to right */
+}
+
+.update-close:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

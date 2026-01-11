@@ -1,6 +1,6 @@
 {
   "name": "mlrs-flasher",
-  "version": "0.2.8",
+  "version": "0.3.0",
   "description": "mLRS Flasher Desktop App - Flash mLRS firmware to Tx modules and receivers",
   "author": "JLP",
   "license": "GPL-3.0",
