@@ -1,6 +1,6 @@
 {
   "name": "mlrs-flasher-electron",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Electron frontend for mLRS Flasher",
   "author": "JLP",
   "main": "main.cjs",
@@ -120,11 +120,11 @@
         }
       ]
     },
-  "nsis": {
-    "oneClick": true,
-    "perMachine": false,
-    "runAfterFinish": true
-  }
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "runAfterFinish": true
+    }
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.1.2",

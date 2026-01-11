@@ -5,10 +5,10 @@
 # https://www.gnu.org/licenses/gpl-3.0.de.html
 # OlliW @ www.olliw.eu
 # ************************************************************
-# mLRS Flasher CLI - JSON interface for Electron
+# mLRS flasher cli - JSON interface for Electron
 # 2026-01-10
 # ************************************************************
-# Command line interface for mLRS Flasher, designed to be called
+# command line interface for mLRS flasher, designed to be called
 # from Electron via child_process.spawn()
 # ************************************************************
 
@@ -826,11 +826,26 @@ def flash_esp(programmer, firmware, comport, baudrate, extra_args=None):
     if not baudrate:
         baudrate = 921600
         
-    esptool = os.path.join(ROOT_DIR, 'thirdparty', 'esptool', 'esptool_wrapper.py')
-    assets_path = os.path.join(ROOT_DIR, 'assets')
+    # try to find esptool script
+    # it might be named esptool.py or esptool_wrapper.py
+    esptool_search_names = ['esptool.py', 'esptool_wrapper.py']
+    esptool = None
+    for name in esptool_search_names:
+        path = os.path.normpath(os.path.join(ROOT_DIR, 'thirdparty', 'esptool', name))
+        if os.path.exists(path):
+            esptool = path
+            break
+            
+    assets_path = os.path.normpath(os.path.join(ROOT_DIR, 'assets'))
     
-    if not os.path.exists(esptool):
-        json_error(f'esptool not found at {esptool}')
+    if not esptool:
+        # last ditch effort, check if it's in assets
+        path = os.path.normpath(os.path.join(assets_path, 'esptool', 'esptool.py'))
+        if os.path.exists(path):
+            esptool = path
+
+    if not esptool:
+        json_error(f'esptool not found in {os.path.join(ROOT_DIR, "thirdparty", "esptool")}')
         return False
     
     if not comport:
@@ -941,19 +956,16 @@ def flash_esp(programmer, firmware, comport, baudrate, extra_args=None):
     env = os.environ.copy()
     env['PYTHONUNBUFFERED'] = '1'
     
-    # Add the directory containing 'esptool' package to PYTHONPATH
-    # This is thirdparty/esptool
-    esptool_dir = os.path.dirname(esptool) # .../thirdparty/esptool
-    if 'PYTHONPATH' in env:
-        env['PYTHONPATH'] = esptool_dir + os.pathsep + env['PYTHONPATH']
-    else:
-        env['PYTHONPATH'] = esptool_dir
-
-    # Invoke as module to avoid import issues with the wrapper script name
-    # This runs .../thirdparty/esptool/esptool/__main__.py which calls esptool._main()
-    # functionally identical to the wrapper but more robust for imports.
+    # shim to bypass Windows PYTHONPATH ignoring in embedded distributions.
+    # we pass the path as the first argument after '-c' and pop it inside.
+    esptool_dir = os.path.dirname(esptool)
+    shim = "import sys, os; sys.path.insert(0, sys.argv.pop(1)); sys.argv[0] = 'esptool'; import esptool; esptool._main()"
+    cmd = [sys.executable, '-u', '-c', shim, esptool_dir] + args
+    
+    json_log(f"debug: launching with shim -> {' '.join(cmd)}")
+    
     proc = subprocess.Popen(
-        [sys.executable, '-u', '-m', 'esptool'] + args,
+        cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         env=env,
