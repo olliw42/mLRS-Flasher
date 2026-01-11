@@ -941,8 +941,19 @@ def flash_esp(programmer, firmware, comport, baudrate, extra_args=None):
     env = os.environ.copy()
     env['PYTHONUNBUFFERED'] = '1'
     
+    # Add the directory containing 'esptool' package to PYTHONPATH
+    # This is thirdparty/esptool
+    esptool_dir = os.path.dirname(esptool) # .../thirdparty/esptool
+    if 'PYTHONPATH' in env:
+        env['PYTHONPATH'] = esptool_dir + os.pathsep + env['PYTHONPATH']
+    else:
+        env['PYTHONPATH'] = esptool_dir
+
+    # Invoke as module to avoid import issues with the wrapper script name
+    # This runs .../thirdparty/esptool/esptool/__main__.py which calls esptool._main()
+    # functionally identical to the wrapper but more robust for imports.
     proc = subprocess.Popen(
-        [sys.executable, '-u', esptool] + args,
+        [sys.executable, '-u', '-m', 'esptool'] + args,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         env=env,

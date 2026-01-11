@@ -1,3 +1,4 @@
 *.py
 *.xml
 !__init__.py
+!v10/ardupilotmega.py
