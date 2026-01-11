@@ -80,6 +80,20 @@ else
     echo "      Python setup complete."
 fi
 
+echo "[2.5/4] Setting permissions..."
+# Ensure Python binary and libs are executable
+# (Recursively set +x on bin/ directory to catch python3, pip, etc.)
+if [ -d "python/$PLATFORM/python/bin" ]; then
+    echo "      Setting +x on Python binaries..."
+    chmod -R +x "python/$PLATFORM/python/bin"
+fi
+
+# Ensure STM32CubeProgrammer binary is executable
+if [ -f "thirdparty/STM32CubeProgrammer/linux/bin/STM32_Programmer_CLI" ]; then
+    echo "      Setting +x on STM32_Programmer_CLI..."
+    chmod +x "thirdparty/STM32CubeProgrammer/linux/bin/STM32_Programmer_CLI"
+fi
+
 echo
 
 # Step 3: Install npm dependencies

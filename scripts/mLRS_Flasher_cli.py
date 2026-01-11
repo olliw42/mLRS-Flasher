@@ -55,6 +55,10 @@ sys.path.insert(0, SCRIPT_DIR)
 import apInitPassthru as appassthru
 import edgetxInitPassthru as radio
 
+# Disable blocking prompts in passthrough scripts
+appassthru.PAUSE_ON_EXIT = False
+radio.PAUSE_ON_EXIT = False
+
 
 # ************************************************************
 # JSON output helpers
@@ -246,6 +250,25 @@ def request_data(url, error_msg=''):
                 json_error(f'Failed to download: {e}')
                 return None
     return None
+
+
+def resolve_chipset(device_dict, target_dict, filename):
+    """resolve chipset from device and target metadata"""
+    chipset = device_dict.get('chipset', 'stm32')
+    
+    # check for target-specific overrides (top-level)
+    if 'chipset' in target_dict:
+        chipset = target_dict['chipset']
+        
+    # check for file-specific overrides
+    for key in target_dict:
+        if key in filename:
+            sub_val = target_dict[key]
+            if isinstance(sub_val, dict) and 'chipset' in sub_val:
+                chipset = sub_val['chipset']
+            break
+            
+    return chipset
 
 
 # ************************************************************
@@ -492,17 +515,18 @@ def cmd_get_metadata(args):
         json_output({})
         return
     
-    chipset = device_dict.get('chipset', 'stm32')
+    # resolve chipset using helper
+    chipset = resolve_chipset(device_dict, target_dict, filename)
+    
     flashmethod = target_dict.get('flashmethod', 'stlink')
     description = target_dict.get('description', '')
     wireless = target_dict.get('wireless')
     
-    # check for target-specific overrides
+    # check for target-specific overrides for other properties
     for key in target_dict:
         if key in filename:
             sub_dict = target_dict[key]
-            if 'chipset' in sub_dict:
-                chipset = sub_dict['chipset']
+            # chipset already resolved
             if 'flashmethod' in sub_dict:
                 flashmethod = sub_dict['flashmethod']
             if 'description' in sub_dict:
@@ -591,16 +615,11 @@ def cmd_flash(args):
         if not device_dict:
              json_log(f'Warning: Device {device_name} not found in metadata, using provided programmer: {provided_programmer}')
         else:
-            chipset = device_dict.get('chipset', 'stm32')
+            # 1. Resolve Device Dictionary (re-used logic)
+            # ... (lines 603-614 are loop to find device_dict, not touching that part yet unless needed)
             
-            # check for target-specific overrides in target_dict based on filename
-            # (matches cmd_get_metadata behavior)
-            for key in target_dict:
-                if key in filename:
-                    sub_dict = target_dict[key]
-                    if 'chipset' in sub_dict:
-                        chipset = sub_dict['chipset']
-                    break
+            # Use helper to resolve chipset
+            chipset = resolve_chipset(device_dict, target_dict, filename)
 
             # 2. Construct Programmer String
             resolved_programmer = ''
@@ -617,7 +636,10 @@ def cmd_flash(args):
                     # BUT existing UI sends `stm32 appassthru serialX`.
                     # Let's see if we can preserve the serial part if provided in the legacy arg
                     if provided_programmer and 'serial' in provided_programmer.lower():
-                         resolved_programmer = provided_programmer # keep the serial info
+                         if not provided_programmer.lower().startswith('stm32 '):
+                             resolved_programmer = 'stm32 ' + provided_programmer
+                         else:
+                             resolved_programmer = provided_programmer
                     else:
                          # fallback if we don't have serial info yet (should catch this later)
                          resolved_programmer = 'stm32 appassthru'
@@ -626,7 +648,10 @@ def cmd_flash(args):
             elif 'esp' in chipset:
                 if 'appassthru' in flash_method:
                     if provided_programmer and 'serial' in provided_programmer.lower():
-                         resolved_programmer = provided_programmer
+                         if not provided_programmer.lower().startswith(chipset) and not provided_programmer.lower().startswith('esp'):
+                             resolved_programmer = f'{chipset} {provided_programmer}'
+                         else:
+                             resolved_programmer = provided_programmer
                     else:
                          resolved_programmer = f'{chipset} appassthru'
                 else:
@@ -811,7 +836,7 @@ def flash_stm32(programmer, firmware, comport, baudrate):
     # build args
     if 'dfu' in programmer:
         args = ['-c', 'port=usb1', '-w', firmware, '-v', '-g']
-    elif 'uart' in programmer:
+    elif 'uart' in programmer or 'appassthru' in programmer:
         args = ['-c', f'port={comport}', f'br={baudrate}', '-w', firmware, '-v', '-g']
     else:
         args = ['-c', 'port=SWD', 'freq=3900', '-w', firmware, '-v', '-g']

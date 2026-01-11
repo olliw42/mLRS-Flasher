@@ -15,6 +15,13 @@
 
 import os, sys, time
 import argparse
+from serial.tools.list_ports import comports
+
+# --------------------------------------------------
+# -- Constants
+# --------------------------------------------------
+
+PAUSE_ON_EXIT = True
 
 
 #--------------------------------------------------
@@ -94,14 +101,16 @@ def find_ardupilot_serial_ports():
 
 def do_msg(msg):
     print(msg)
-    print('Press Enter to continue')
-    input()
+    if PAUSE_ON_EXIT:
+        print('Press Enter to continue')
+        input()
 
 
 def do_error(msg):
     print(msg)
-    print('Press Enter to continue')
-    input()
+    if PAUSE_ON_EXIT:
+        print('Press Enter to continue')
+        input()
     sys.exit(1)
 
 #find_ardupilot_serial_ports()
@@ -221,11 +230,12 @@ def ardupilot_set_scripting(link, serialx):
     param_str = 'SERIAL'+str(serialx)+'_PROTOCOL'
     print('  set '+param_str+' = scripting')
     mavparm.MAVParmDict().mavset(link, param_str, 28)
-    time.sleep(0.5) # wait a bit
     link.close()
     do_msg(
-        '\r\nPlease unplug USB and hold receiver boot button down while plugging in USB.\r\n' +
-        'Wait until USB is re-enumerated and flight controller has booted up (typically 10-20 secs).')
+        '\r\n1. Power down the flight controller.\r\n' +
+        '2. Hold down the receiver BOOT button.\r\n' +
+        '3. Power up the flight controller (plug in USB).\r\n' +
+        '   You have 60 seconds to reconnect.')
 
 
 #--------------------------------------------------
@@ -348,7 +358,39 @@ def mlrs_open_passthrough(comport, baudrate, serialx, options=[]):
         time.sleep(0.5) # can't hurt
     if 'scripting' in options:
         ardupilot_set_scripting(link, serialx) # also closes link
-        link = ardupilot_connect(apport, receiver_baud)
+        
+        # Wait for disconnect
+        print('Waiting for disconnection (please unplug)...')
+        disc_timeout = 30
+        start = time.time()
+        while time.time() - start < disc_timeout:
+            try:
+                current_ports = [p.device for p in comports()]
+                if apport not in current_ports:
+                    print('Device disconnected!')
+                    break
+            except Exception:
+                pass
+            time.sleep(0.5)
+        
+        # Retry loop for reconnection
+        print('Waiting for reconnection...')
+        timeout = 60
+        start = time.time()
+        link = None
+        while time.time() - start < timeout:
+            # We must handle the potential "port not found" error inside connect if the device isn't back yet
+            # ardupilot_connect handles serial opening, but might fail if port is gone
+            try:
+                 link = ardupilot_connect(apport, receiver_baud)
+                 if link: 
+                     break
+            except Exception:
+                 pass
+            time.sleep(5)
+            
+        if not link:
+            do_error('Failed to reconnect to Flight Controller')
     print('------------------------------------------------------------')
     ardupilot_open_passthrough(link, serialx)
     print('------------------------------------------------------------')

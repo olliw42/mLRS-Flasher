@@ -13,6 +13,12 @@ import os, sys, time
 import argparse
 import serial
 
+# --------------------------------------------------
+# -- Constants
+# --------------------------------------------------
+
+PAUSE_ON_EXIT = True
+
 
 #--------------------------------------------------
 #-- Internal Tx Module Flashing Tools
@@ -56,14 +62,16 @@ def is_valid_radio_port(comport):
 
 def do_msg(msg):
     print(msg)
-    print('Press Enter to continue')
-    input()
+    if PAUSE_ON_EXIT:
+        print('Press Enter to continue')
+        input()
 
 
 def do_error(msg):
     print(msg)
-    print('Press Enter to continue')
-    input()
+    if PAUSE_ON_EXIT:
+        print('Press Enter to continue')
+        input()
     sys.exit(1)
 
 
