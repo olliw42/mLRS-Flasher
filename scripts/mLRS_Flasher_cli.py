@@ -962,7 +962,7 @@ def flash_esp(programmer, firmware, comport, baudrate, extra_args=None):
     shim = "import sys, os; sys.path.insert(0, sys.argv.pop(1)); sys.argv[0] = 'esptool'; import esptool; esptool._main()"
     cmd = [sys.executable, '-u', '-c', shim, esptool_dir] + args
     
-    json_log(f"debug: launching with shim -> {' '.join(cmd)}")
+    #json_log(f"debug: launching with shim -> {' '.join(cmd)}")
     
     proc = subprocess.Popen(
         cmd,
