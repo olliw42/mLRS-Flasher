@@ -20,6 +20,7 @@ import argparse
 import subprocess
 import re
 import copy
+import tempfile
 
 # resolve paths relative to this script
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -571,10 +572,14 @@ def cmd_flash(args):
     """flash firmware to device"""
     json_log('Starting flash operation...')
     
-    # create temp directory
-    temp_dir = os.path.join(ROOT_DIR, 'temp')
+    # create temp directory in system temp
+    temp_dir = os.path.join(tempfile.gettempdir(), 'mLRS-Flasher')
     if not os.path.exists(temp_dir):
-        os.makedirs(temp_dir)
+        try:
+            os.makedirs(temp_dir)
+        except Exception as e:
+            json_error(f'Failed to create temp directory {temp_dir}: {e}')
+            return
     
     url = args.url
     filename = args.filename
