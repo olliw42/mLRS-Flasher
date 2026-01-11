@@ -25,7 +25,7 @@ STDLIB_TO_PRUNE = [
 PACKAGES_TO_PRUNE = [
     'pip', 'setuptools', 'wheel',
     'PIL', 'Pillow',
-    'lxml', 'cryptography', 'ecdsa',
+    # 'lxml', 'cryptography', 'ecdsa', are needed
     # Add other known unused heavy packages here
 ]
 

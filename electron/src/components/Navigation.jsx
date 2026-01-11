@@ -36,7 +36,7 @@ function Navigation({ activeTab, onTabChange }) {
       </div>
 
       <div className="nav-footer">
-        <span className="version">v0.2.3</span>
+        <span className="version">v0.2.4</span>
       </div>
     </nav>
   );

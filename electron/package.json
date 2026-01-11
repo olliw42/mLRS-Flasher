@@ -1,6 +1,6 @@
 {
   "name": "mlrs-flasher-electron",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Electron frontend for mLRS Flasher",
   "author": "JLP",
   "main": "main.cjs",

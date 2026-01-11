@@ -25,6 +25,10 @@ NPM_BUILD_CMD="npm run build:linux"
 # Navigate to project root
 cd "$(dirname "$0")/.."
 echo "Working directory: $(pwd)"
+
+# Cleanup previous builds
+echo "Cleaning up dist/ directory..."
+rm -rf dist
 echo
 
 # Step 1: Download Python Runtime

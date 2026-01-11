@@ -27,6 +27,10 @@ if %errorlevel% neq 0 (
 :: navigate to project root
 cd /d "%~dp0.."
 echo Working directory: %cd%
+
+:: cleanup previous builds
+echo Cleaning up dist\ directory...
+if exist "dist" rmdir /s /q "dist"
 echo.
 
 :: step 1: download windows python runtime

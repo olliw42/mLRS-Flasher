@@ -6,7 +6,7 @@
 # OlliW @ www.olliw.eu
 # ************************************************************
 # mLRS flasher cli - JSON interface for Electron
-# 2026-01-10
+# 2026-01-11
 # ************************************************************
 # command line interface for mLRS flasher, designed to be called
 # from Electron via child_process.spawn()
@@ -24,6 +24,20 @@ import copy
 # resolve paths relative to this script
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
+
+# ************************************************************
+# Constants
+# ************************************************************
+
+if sys.platform == 'darwin':
+    STM32_PROG_PATH = os.path.join(ROOT_DIR, 'thirdparty', 'STM32CubeProgrammer', 'mac', 'bin', 'STM32_Programmer_CLI')
+elif sys.platform == 'linux':
+    STM32_PROG_PATH = os.path.join(ROOT_DIR, 'thirdparty', 'STM32CubeProgrammer', 'linux', 'bin', 'STM32_Programmer_CLI')
+else:
+    STM32_PROG_PATH = os.path.join(ROOT_DIR, 'thirdparty', 'STM32CubeProgrammer', 'win', 'bin', 'STM32_Programmer_CLI.exe')
+
+ESPTOOL_PATH = os.path.normpath(os.path.join(ROOT_DIR, 'thirdparty', 'esptool', 'esptool.py'))
+ASSETS_PATH = os.path.normpath(os.path.join(ROOT_DIR, 'assets'))
 
 # add thirdparty to path for pymavlink
 sys.path.insert(0, os.path.join(ROOT_DIR, 'thirdparty', 'mavlink'))
@@ -112,6 +126,35 @@ def is_ansi_garbage(text):
     if re.match(r'^\d+m$', stripped):   # just "32m" alone
         return True
     return False
+
+
+def monitor_process(proc, progress_regex=None):
+    """monitor a subprocess and parse progress"""
+    last_percent = -1
+    
+    for line in read_lines_with_cr(proc.stdout):
+        clean_line = strip_ansi(line).strip()
+        if not clean_line:
+            continue
+            
+        # update smooth progress bar if regex provided
+        if progress_regex:
+            match = re.search(progress_regex, clean_line)
+            if match:
+                percent = int(match.group(1))
+                if percent != last_percent:
+                    json_progress(percent, 'Flashing...')
+                    last_percent = percent
+        
+        # skip logging ANSI garbage lines (partial escape codes)
+        if is_ansi_garbage(clean_line):
+            continue
+        
+        # log meaningful lines to console
+        json_log(clean_line)
+    
+    proc.wait()
+    return proc.returncode
 
 
 def read_lines_with_cr(stream):
@@ -757,16 +800,9 @@ def cmd_flash(args):
 
 def flash_stm32(programmer, firmware, comport, baudrate):
     """flash STM32 using STM32CubeProgrammer"""
-    # find programmer
-    if sys.platform == 'darwin':
-        st_prog = os.path.join(ROOT_DIR, 'thirdparty', 'STM32CubeProgrammer', 'mac', 'bin', 'STM32_Programmer_CLI')
-    elif sys.platform == 'linux':
-        st_prog = os.path.join(ROOT_DIR, 'thirdparty', 'STM32CubeProgrammer', 'linux', 'bin', 'STM32_Programmer_CLI')
-    else:
-        st_prog = os.path.join(ROOT_DIR, 'thirdparty', 'STM32CubeProgrammer', 'win', 'bin', 'STM32_Programmer_CLI.exe')
     
-    if not os.path.exists(st_prog):
-        json_error(f'STM32CubeProgrammer not found at {st_prog}')
+    if not os.path.exists(STM32_PROG_PATH):
+        json_error(f'STM32CubeProgrammer not found at {STM32_PROG_PATH}')
         return False
     
     if not baudrate:
@@ -780,72 +816,34 @@ def flash_stm32(programmer, firmware, comport, baudrate):
     else:
         args = ['-c', 'port=SWD', 'freq=3900', '-w', firmware, '-v', '-g']
     
-    json_log(f'Running: {st_prog} {" ".join(args)}')
+    json_log(f'Running: {STM32_PROG_PATH} {" ".join(args)}')
     
     # run programmer
     proc = subprocess.Popen(
-        [st_prog] + args,
+        [STM32_PROG_PATH] + args,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         bufsize=0
     )
     
-    last_percent = -1
+    # monitor process with progress regex for STM32
+    # output: ... (45%) ...
+    returncode = monitor_process(proc, r'(\d+)%')
     
-    for line in read_lines_with_cr(proc.stdout):
-        clean_line = strip_ansi(line).strip()
-        if not clean_line:
-            continue
-            
-        # update smooth progress bar
-        match = re.search(r'(\d+)%', clean_line)
-        if match:
-            percent = int(match.group(1))
-            if percent != last_percent:
-                json_progress(percent, 'Flashing...')
-                last_percent = percent
-        
-        # skip logging ANSI garbage lines (partial escape codes)
-        if is_ansi_garbage(clean_line):
-            continue
-        
-        # log meaningful lines to console
-        json_log(clean_line)
-    
-    proc.wait()
-    if proc.returncode != 0:
-        json_error(f'STM32CubeProgrammer exited with code {proc.returncode}')
+    if returncode != 0:
+        json_error(f'STM32CubeProgrammer exited with code {returncode}')
         return False
     
     return True
 
 
 def flash_esp(programmer, firmware, comport, baudrate, extra_args=None):
-
     """flash ESP using esptool"""
     if not baudrate:
         baudrate = 921600
         
-    # try to find esptool script
-    # it might be named esptool.py or esptool_wrapper.py
-    esptool_search_names = ['esptool.py', 'esptool_wrapper.py']
-    esptool = None
-    for name in esptool_search_names:
-        path = os.path.normpath(os.path.join(ROOT_DIR, 'thirdparty', 'esptool', name))
-        if os.path.exists(path):
-            esptool = path
-            break
-            
-    assets_path = os.path.normpath(os.path.join(ROOT_DIR, 'assets'))
-    
-    if not esptool:
-        # last ditch effort, check if it's in assets
-        path = os.path.normpath(os.path.join(assets_path, 'esptool', 'esptool.py'))
-        if os.path.exists(path):
-            esptool = path
-
-    if not esptool:
-        json_error(f'esptool not found in {os.path.join(ROOT_DIR, "thirdparty", "esptool")}')
+    if not os.path.exists(ESPTOOL_PATH):
+        json_error(f'esptool not found at {ESPTOOL_PATH}')
         return False
     
     if not comport:
@@ -863,46 +861,45 @@ def flash_esp(programmer, firmware, comport, baudrate, extra_args=None):
     if extra_args.get('erase') == 'full_erase':
         erase_args = ['-e']
 
+    # Common base arguments
+    base_args = [
+        '--port', comport,
+        '--baud', str(baudrate),
+        '--before', before_mode,
+        '--after', 'hard_reset',
+        'write_flash'
+    ] + erase_args + [
+        '-z',
+        '--flash_mode', 'dio',
+        '--flash_freq', '40m'
+    ]
+
+    # Defaults for unknown chips (fallback)
+    chip = 'unknown'
+    flash_size = '4MB'
+    bootloader_images = []
+
     if 'esp32c3' in programmer:
         chip = 'esp32c3'
-        args = [
-            '--chip', chip,
-            '--port', comport,
-            '--baud', str(baudrate or 921600),
-            '--before', before_mode,
-            '--after', 'hard_reset',
-            'write_flash'
-        ] + erase_args + [
-            '-z',
-            '--flash_mode', 'dio',
-            '--flash_freq', '40m',
-            '--flash_size', '4MB',
-            '0x0000', os.path.join(assets_path, 'esp32c3', 'bootloader.bin'),
-            '0x8000', os.path.join(assets_path, 'esp32c3', 'partitions.bin'),
-            '0xe000', os.path.join(assets_path, 'esp32c3', 'boot_app0.bin'),
+        flash_size = '4MB'
+        bootloader_images = [
+            '0x0000', os.path.join(ASSETS_PATH, 'esp32c3', 'bootloader.bin'),
+            '0x8000', os.path.join(ASSETS_PATH, 'esp32c3', 'partitions.bin'),
+            '0xe000', os.path.join(ASSETS_PATH, 'esp32c3', 'boot_app0.bin'),
             '0x10000', firmware,
         ]
     elif 'esp32s3' in programmer:
         chip = 'esp32s3'
-        args = [
-            '--chip', chip,
-            '--port', comport,
-            '--baud', str(baudrate or 921600),
-            '--before', before_mode,
-            '--after', 'hard_reset',
-            'write_flash'
-        ] + erase_args + [
-            '-z',
-            '--flash_mode', 'dio',
-            '--flash_freq', '40m',
-            '--flash_size', '8MB',
-            '0x0000', os.path.join(assets_path, 'esp32s3', 'bootloader.bin'),
-            '0x8000', os.path.join(assets_path, 'esp32s3', 'partitions.bin'),
-            '0xe000', os.path.join(assets_path, 'esp32s3', 'boot_app0.bin'),
+        flash_size = '8MB'
+        bootloader_images = [
+            '0x0000', os.path.join(ASSETS_PATH, 'esp32s3', 'bootloader.bin'),
+            '0x8000', os.path.join(ASSETS_PATH, 'esp32s3', 'partitions.bin'),
+            '0xe000', os.path.join(ASSETS_PATH, 'esp32s3', 'boot_app0.bin'),
             '0x10000', firmware,
         ]
     elif 'esp32' in programmer:
         chip = 'esp32'
+        flash_size = '4MB'
         
         # determine bootloader based on version
         bootloader_file = 'bootloader_40dio.bin'
@@ -916,29 +913,28 @@ def flash_esp(programmer, firmware, comport, baudrate, extra_args=None):
         except Exception:
             pass
 
-        args = [
-            '--chip', chip,
-            '--port', comport,
-            '--baud', str(baudrate or 921600),
-            '--before', before_mode,
-            '--after', 'hard_reset',
-            'write_flash'
-        ] + erase_args + [
-            '-z',
-            '--flash_mode', 'dio',
-            '--flash_freq', '40m',
-            '--flash_size', '4MB',
-            '0x1000', os.path.join(assets_path, 'esp32', bootloader_file),
-            '0x8000', os.path.join(assets_path, 'esp32', 'partitions.bin'),
-            '0xe000', os.path.join(assets_path, 'esp32', 'boot_app0.bin'),
+        bootloader_images = [
+            '0x1000', os.path.join(ASSETS_PATH, 'esp32', bootloader_file),
+            '0x8000', os.path.join(ASSETS_PATH, 'esp32', 'partitions.bin'),
+            '0xe000', os.path.join(ASSETS_PATH, 'esp32', 'boot_app0.bin'),
             '0x10000', firmware,
         ]
     elif 'esp8285' in programmer or 'esp8266' in programmer:
         chip = 'esp8266'
+        # esp8266 uses simpler args, doesn't need flash_mode/freq/size for write_flash mostly?
+        # Re-constructing exact previous behavior:
+        # previous: --chip esp8266 --port .. --baud .. --before .. --after .. write_flash [-e] 0x0 fw
+        
+        # Reuse base_args but strip the flash params which weren't in the original block for 8266?
+        # Original 8266 block:
+        # args = ['--chip', chip, '--port', ..., '--after', 'hard_reset', 'write_flash'] + e_args + ['0x0', firmware]
+        # It did NOT have -z, --flash_mode, --flash_freq, --flash_size.
+        
+        # Let's handle 8266 separately to preserve exact behavior, or carefully construct.
         args = [
             '--chip', chip,
             '--port', comport,
-            '--baud', str(baudrate or 921600),
+            '--baud', str(baudrate),
             '--before', before_mode,
             '--after', 'hard_reset',
             'write_flash'
@@ -949,6 +945,10 @@ def flash_esp(programmer, firmware, comport, baudrate, extra_args=None):
         json_error(f'Unknown ESP chip in programmer: {programmer}')
         return False
     
+    # Construct final args for ESP32 variants
+    if chip != 'esp8266':
+         args = ['--chip', chip] + base_args + ['--flash_size', flash_size] + bootloader_images
+
     json_log(f'Running esptool for {chip}...')
     
     # run esptool
@@ -957,12 +957,11 @@ def flash_esp(programmer, firmware, comport, baudrate, extra_args=None):
     env['PYTHONUNBUFFERED'] = '1'
     
     # shim to bypass Windows PYTHONPATH ignoring in embedded distributions.
-    # we pass the path as the first argument after '-c' and pop it inside.
-    esptool_dir = os.path.dirname(esptool)
+    esptool_dir = os.path.dirname(ESPTOOL_PATH)
     shim = "import sys, os; sys.path.insert(0, sys.argv.pop(1)); sys.argv[0] = 'esptool'; import esptool; esptool._main()"
     cmd = [sys.executable, '-u', '-c', shim, esptool_dir] + args
     
-    #json_log(f"debug: launching with shim -> {' '.join(cmd)}")
+    # json_log(f"debug: launching with shim -> {' '.join(cmd)}")
     
     proc = subprocess.Popen(
         cmd,
@@ -972,31 +971,15 @@ def flash_esp(programmer, firmware, comport, baudrate, extra_args=None):
         bufsize=0
     )
     
-    last_percent = -1
-    
     # Simple debug to confirm start
     json_log(f'Esptool started with args: {args}')
 
-    for line in read_lines_with_cr(proc.stdout):
-        clean_line = strip_ansi(line).strip()
-        if not clean_line:
-            continue
-            
-        # check for progress
-        # esptool: Writing at 0x00010000... (10 %)
-        match = re.search(r'\((\d+)\s*%\)', clean_line)
-        if match:
-            percent = int(match.group(1))
-            if percent != last_percent:
-                json_progress(percent, 'Flashing...')
-                last_percent = percent
-        
-        # always log to console
-        json_log(clean_line)
-    
-    proc.wait()
-    if proc.returncode != 0:
-        json_error(f'esptool exited with code {proc.returncode}')
+    # monitor process with progress regex for esptool
+    # output: ... (10 %) ...
+    returncode = monitor_process(proc, r'\((\d+)\s*%\)')
+
+    if returncode != 0:
+        json_error(f'esptool exited with code {returncode}')
         return False
         
     return True

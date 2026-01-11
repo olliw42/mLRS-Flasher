@@ -6,7 +6,7 @@
 # OlliW @ www.olliw.eu
 #************************************************************
 # Open passthrough to receiver on ArduPilot systems
-# 15. Nov. 2025
+# 2026-01-11
 #************************************************************
 # Does this:
 # - opens serial passthrough in ArduPilot flight controller
@@ -22,9 +22,9 @@ import argparse
 #--------------------------------------------------
 
 # sys.path.append(os.path.join('thirdparty','mavlink'))
+os.environ['MAVLINK20'] = '1'
 from pymavlink import mavutil
 from pymavlink import mavparm
-os.environ['MAVLINK20'] = '1'
 mavutil.set_dialect("ardupilotmega")
 
 
