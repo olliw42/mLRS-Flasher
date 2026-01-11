@@ -210,7 +210,7 @@ example usage in batch file
 @ECHO *** 3. Flashing the internal Tx Module ***
 @ECHO.
 @ECHO The firmware to flash is: firmware
-@thirdparty/esptool/esptool.py esptool_args
+@thirdparty/esptool/esptool_wrapper.py esptool_args
 @ECHO.
 @ECHO *** DONE ***
 @ECHO.

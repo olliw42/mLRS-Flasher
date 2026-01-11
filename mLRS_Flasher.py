@@ -332,7 +332,7 @@ def flash_esptool_win_as_script(programmer, firmware, comport, baudrate):
     F = open(os.path.join('mlrs_flasher_runner.py'), 'w')
     F.write('import os\n')
     F.write('from mLRS_Flasher import _flash_esptool_argstr\n')
-    F.write("ESP_Programmer = os.path.join('thirdparty','esptool','esptool.py')\n")
+    F.write("ESP_Programmer = os.path.join('thirdparty','esptool','esptool_wrapper.py')\n")
     F.write('args = _flash_esptool_argstr('+_cvtstr(programmer)+', '+_cvtstr(firmware)+', '+_cvtstr(comport)+', '+str(baudrate)+')\n')
     F.write('os.system(ESP_Programmer + \' \' + args)\n')
     F.write('print()\n')
@@ -345,7 +345,7 @@ def flash_esptool_win_as_script(programmer, firmware, comport, baudrate):
 
 
 def flash_esptool(programmer, firmware, comport, baudrate):
-    ESP_Programmer = os.path.join('thirdparty','esptool','esptool.py')
+    ESP_Programmer = os.path.join('thirdparty','esptool','esptool_wrapper.py')
     args = _flash_esptool_argstr(programmer, firmware, comport, baudrate)
     # TODO: can we catch if this was succesful?
     os_system(ESP_Programmer + ' ' + args)
@@ -361,7 +361,7 @@ def flash_esptool_appassthru_win_as_script(programmer, serialx_no, firmware):
     F.write("print('waiting for 5 secs...')\n")
     F.write('time.sleep(5.0)\n')
     F.write("print('flashing...')\n")
-    F.write("ESP_Programmer = os.path.join('thirdparty','esptool','esptool.py')\n")
+    F.write("ESP_Programmer = os.path.join('thirdparty','esptool','esptool_wrapper.py')\n")
     F.write('args = _flash_esptool_argstr('+_cvtstr(programmer)+', '+_cvtstr(firmware)+', comport, baudrate)\n')
     F.write('os.system(ESP_Programmer + \' \' + args)\n')
     F.write('print()\n')
@@ -428,7 +428,7 @@ def flash_internal_elrs_tx_module_win_as_script(programmer, firmware, baudrate, 
     F.write('print("*** 3. Flashing the internal Tx Module ***")\n')
     F.write('print()\n')
     F.write('print("The firmware to flash is:",'+_cvtstr(firmware)+')\n')
-    F.write("ESP_Programmer = os.path.join('thirdparty','esptool','esptool.py')\n")
+    F.write("ESP_Programmer = os.path.join('thirdparty','esptool','esptool_wrapper.py')\n")
     F.write('args = _flash_esptool_argstr('+_cvtstr(programmer)+', '+_cvtstr(firmware)+', radioport, '+str(baudrate)+')\n')
     F.write('os.system(ESP_Programmer + \' \' + args)\n')
     F.write('print()\n')

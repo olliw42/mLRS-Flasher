@@ -59,5 +59,23 @@ const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
 ## 5. Synchronization
 After updating the `package.json` files, it is recommended to run `npm install` (or `npm install` inside the `electron` folder) to ensure `package-lock.json` is synchronized.
 
+## 6. Git Commit and Tagging
+
+Finally, commit the version changes and create a git tag to trigger the build process (GitHub Actions).
+
+```bash
+# 1. Stage all changes
+git add .
+
+# 2. Commit the changes
+git commit -m "chore: bump version to 0.2.x"
+
+# 3. Create the git tag
+git tag v0.2.x
+
+# 4. Push changes and tag to remote (e.g., JLP)
+git push JLP HEAD v0.2.x
+```
+
 ---
 *Last Updated: 2026-01-10*

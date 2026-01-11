@@ -826,7 +826,7 @@ def flash_esp(programmer, firmware, comport, baudrate, extra_args=None):
     if not baudrate:
         baudrate = 921600
         
-    esptool = os.path.join(ROOT_DIR, 'thirdparty', 'esptool', 'esptool.py')
+    esptool = os.path.join(ROOT_DIR, 'thirdparty', 'esptool', 'esptool_wrapper.py')
     assets_path = os.path.join(ROOT_DIR, 'assets')
     
     if not os.path.exists(esptool):
