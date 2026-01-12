@@ -7,18 +7,61 @@
 
 import requests
 import copy
+import os
+import json
+import time
+import tempfile
 from .utils import json_log, json_error
 
-g_jsonCacheDict = {}
+# cache configuration
+CACHE_DIR = os.path.join(tempfile.gettempdir(), 'mLRS-Flasher')
+CACHE_FILE = os.path.join(CACHE_DIR, 'api_cache.json')
+
+def ensure_cache_dir():
+    if not os.path.exists(CACHE_DIR):
+        try:
+            os.makedirs(CACHE_DIR)
+        except Exception:
+            pass
+
+def load_persistent_cache():
+    if not os.path.exists(CACHE_FILE):
+        return {}
+    try:
+        with open(CACHE_FILE, 'r') as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+def save_persistent_cache(data):
+    ensure_cache_dir()
+    try:
+        with open(CACHE_FILE, 'w') as f:
+            json.dump(data, f)
+    except Exception:
+        pass
+
 
 # request json from url with caching
 def request_json_dict(url, extension='', error_msg=''):
-    if url in g_jsonCacheDict:
-        return copy.deepcopy(g_jsonCacheDict[url])
+    # check persistent cache first
+    cached_data = load_persistent_cache()
+    current_time = time.time()
+    
+    # generate a cache key (simple url based)
+    cache_key = url + extension
+    
+    if cache_key in cached_data:
+        entry = cached_data[cache_key]
+        # check if cache is effective (valid for 10 minutes)
+        if current_time - entry.get('timestamp', 0) < 600:
+            return entry.get('data')
     
     json_log(f'Fetching {url}...')
     res = None
     tries = 4
+    json_dict = None
+    
     while tries > 0:
         try:
             res = requests.get(url + extension, allow_redirects=True, timeout=(3.05, 15))
@@ -36,7 +79,14 @@ def request_json_dict(url, extension='', error_msg=''):
                 json_error(f'Failed to fetch {url}')
                 return None
     
-    g_jsonCacheDict[url] = copy.deepcopy(json_dict)
+    if json_dict is not None:
+        # update cache
+        cached_data[cache_key] = {
+            'timestamp': current_time,
+            'data': json_dict
+        }
+        save_persistent_cache(cached_data)
+        
     return json_dict
 
 
