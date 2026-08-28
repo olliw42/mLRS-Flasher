@@ -4,8 +4,10 @@
 
 Link to the [mLRS project](https://github.com/olliw42/mLRS).
 
-This repository has been depracted as of 16. Jan. 2026, in favour of the [mLRS Flasher Web App](https://olliw.eu/mLRSFlasher).
+> [!IMPORTANT]
+> This repository has been depracted as of 16. Jan. 2026, in favour of the [mLRS Flasher Web App](https://olliw.eu/mLRSFlasher).
 
-
+> [!CAUTION]
+> This repository is not maintained and not functional. DO NOT USE.
 
 
